@@ -1,0 +1,22 @@
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.totals {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+}
+
+.totalPrice {
+  display: flex;
+  align-items: center;
+}
