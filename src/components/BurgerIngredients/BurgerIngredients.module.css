@@ -1,7 +1,22 @@
-.section {
-  max-width: 600px;
+.section {    
   display: flex;
-  flex-direction: column;
+  flex-direction: column;  
+}
+
+.scrollSection {
+  height: calc(100vh - 250px);
+  overflow-y: scroll;
+  overflow-x: hidden; 
+}
+
+.scrollSection::-webkit-scrollbar {
+  width: 8px;  
+  background-color: #2F2F37;
+}
+
+.scrollSection::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  border: 3px solid #8585AD
 }
 
 .currency {
@@ -20,4 +35,8 @@
   align-items: center;
   width: 272px;
   position: relative;
+}
+
+.cardTitle {
+  text-align: center;
 }

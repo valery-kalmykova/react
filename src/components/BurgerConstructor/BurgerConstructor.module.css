@@ -3,10 +3,40 @@
   flex-direction: column;
 }
 
-.scrollSection {
+.elementsList{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.scrollSection {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 536px);
+  overflow-y: scroll;
+  overflow-x: hidden; 
+}
+
+.scrollSection::-webkit-scrollbar {
+  width: 8px;  
+  background-color: #2F2F37;
+}
+
+.scrollSection::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  border: 3px solid #8585AD
+}
+
+.constructorElement{
+  display: flex;
+  justify-content: space-between;
 }
 
 .totals {
@@ -14,6 +44,7 @@
   justify-content: end;
   align-items: center;
   width: 100%;
+  margin-bottom: 52px;
 }
 
 .totalPrice {
