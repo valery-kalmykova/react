@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import { data } from '../../utils/data.js'
-import { render } from '@testing-library/react';
 
 function TabSet() {
   const [current, setCurrent] = useState('one')
