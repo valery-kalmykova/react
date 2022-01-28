@@ -4,23 +4,6 @@ import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import { data } from '../../utils/data.js'
 
-const TabSet = () => {
-  const [current, setCurrent] = useState('Булки')
-  return (
-    <div style={{ display: 'flex' }} className='mb-10'>
-      <Tab value="Булки" active={current === 'Булки'} onClick={setCurrent}>
-        Булки
-      </Tab>
-      <Tab value="Соусы" active={current === 'Соусы'} onClick={setCurrent}>
-        Соусы
-      </Tab>
-      <Tab value="Начинки" active={current === 'Начинки'} onClick={setCurrent}>
-        Начинки
-      </Tab>
-    </div>
-  )
-}
-
 const Card = ({card}) => (
   <div className={burgerIngredientsStyles.card + ' mb-8'}>
         {/* <Counter count={1} size="default"/> */}
@@ -53,6 +36,23 @@ const TypeCards = ({data, prop}) => (
 TypeCards.propTypes = {
   dataElement: PropTypes.object,
   _id: PropTypes.string
+}
+
+const TabSet = () => {
+  const [current, setCurrent] = useState('Булки')
+  return (
+    <div style={{ display: 'flex' }} className='mb-10'>
+      <Tab value="Булки" active={current === 'Булки'} onClick={setCurrent}>
+        Булки
+      </Tab>
+      <Tab value="Соусы" active={current === 'Соусы'} onClick={setCurrent}>
+        Соусы
+      </Tab>
+      <Tab value="Начинки" active={current === 'Начинки'} onClick={setCurrent}>
+        Начинки
+      </Tab>
+    </div>
+  )
 }
 
 const BurgerIngredients = () => {    
