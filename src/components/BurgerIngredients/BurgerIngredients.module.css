@@ -4,7 +4,7 @@
 }
 
 .scrollSection {
-  height: calc(100vh - 250px);
+  height: calc(100vh - 320px);
   overflow-y: scroll;
   overflow-x: hidden; 
 }

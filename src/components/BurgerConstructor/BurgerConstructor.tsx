@@ -16,8 +16,7 @@ class BurgerConstructor extends React.Component {
               isLocked={true}
               text="Краторная булка N-200i (верх)"
               price={200}
-              thumbnail={img}
-              className='ml-8'
+              thumbnail={img}              
             />
           </li>          
           <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
@@ -124,8 +123,7 @@ class BurgerConstructor extends React.Component {
               isLocked={true}
               text="Краторная булка N-200i (низ)"
               price={200}
-              thumbnail={img}
-              className='ml-8'
+              thumbnail={img}              
             />
           </li>  
         </ul>

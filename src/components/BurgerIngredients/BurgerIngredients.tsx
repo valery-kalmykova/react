@@ -4,18 +4,18 @@ import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import { data } from '../../utils/data.js'
 
-function TabSet() {
-  const [current, setCurrent] = useState('one')
+const TabSet = () => {
+  const [current, setCurrent] = useState('Булки')
   return (
-    <div style={{ display: 'flex' }}>
-      <Tab value="one" active={current === 'one'} onClick={setCurrent}>
-        One
+    <div style={{ display: 'flex' }} className='mb-10'>
+      <Tab value="Булки" active={current === 'Булки'} onClick={setCurrent}>
+        Булки
       </Tab>
-      <Tab value="two" active={current === 'two'} onClick={setCurrent}>
-        Two
+      <Tab value="Соусы" active={current === 'Соусы'} onClick={setCurrent}>
+        Соусы
       </Tab>
-      <Tab value="three" active={current === 'three'} onClick={setCurrent}>
-        Three
+      <Tab value="Начинки" active={current === 'Начинки'} onClick={setCurrent}>
+        Начинки
       </Tab>
     </div>
   )
@@ -55,7 +55,7 @@ TypeCards.propTypes = {
   _id: PropTypes.string
 }
 
-function BurgerIngredients() {    
+const BurgerIngredients = () => {    
   return (
     <section className={burgerIngredientsStyles.section + ' mr-10'}>
       <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
