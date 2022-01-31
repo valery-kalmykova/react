@@ -7,10 +7,10 @@ import appStyle from './App.module.css';
 function App() {
   return (
     <div className={appStyle.app}>
-      <AppHeader></AppHeader>
+      <AppHeader />
       <div className={appStyle.main}>
-        <BurgerIngredients></BurgerIngredients>
-        <BurgerConstructor></BurgerConstructor>        
+        <BurgerIngredients />
+        <BurgerConstructor />        
       </div>
       
     </div>
