@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import img from '../../images/img.svg'
-import { data } from '../../utils/data.js'
 
 const ConstructorEl = props => {
   return <li className={burgerConstructorStyles.constructorElement}>
@@ -23,7 +22,8 @@ ConstructorEl.propTypes = {
   _id: PropTypes.string.isRequired,
 }
 
-const BurgerConstructor = () => {  
+const BurgerConstructor = props => {
+  
   return (
     <section className={burgerConstructorStyles.section + ' ml-4'}>
       <ul className={burgerConstructorStyles.elementsList + ' mt-25'}>
@@ -37,8 +37,8 @@ const BurgerConstructor = () => {
           />          
         </li>          
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {data.map(dataElement => {
-            if (dataElement.__v > 0 && (dataElement.type === 'main' || dataElement.type === 'sauce')) {
+          {props.data.map(dataElement => {
+            if (dataElement.__v >= 0 && (dataElement.type === 'main' || dataElement.type === 'sauce')) {
               return <ConstructorEl {...dataElement} key={dataElement._id}/>
             }      
           })}                        
@@ -62,6 +62,10 @@ const BurgerConstructor = () => {
       </div>
     </section>      
   )
+}
+
+BurgerConstructor.propTypes = {
+  data: PropTypes.object.isRequired
 }
 
 export default BurgerConstructor;

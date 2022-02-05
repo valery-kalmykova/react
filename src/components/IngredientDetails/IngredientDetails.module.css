@@ -1,0 +1,25 @@
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  align-self: flex-start;
+}
+
+.items {
+  list-style-type: none;
+  display: flex;
+  padding-left: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 56px;
+  justify-content: space-between;
+}
