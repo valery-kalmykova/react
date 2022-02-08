@@ -22,7 +22,8 @@ ConstructorEl.propTypes = {
   _id: PropTypes.string.isRequired,
 }
 
-const BurgerConstructor = props => {
+const BurgerConstructor = ({data, handleOpenModal}) => {
+  
   
   return (
     <section className={burgerConstructorStyles.section + ' ml-4'}>
@@ -37,7 +38,7 @@ const BurgerConstructor = props => {
           />          
         </li>          
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {props.data.map(dataElement => {
+          {data.map(dataElement => {
             if (dataElement.__v >= 0 && (dataElement.type === 'main' || dataElement.type === 'sauce')) {
               return <ConstructorEl {...dataElement} key={dataElement._id}/>
             }      
@@ -58,14 +59,14 @@ const BurgerConstructor = props => {
           <p className="text text_type_digits-medium mr-2">610</p>
           <CurrencyIcon type="primary" />
         </div>          
-        <Button type="primary" size="large">Оформить заказ</Button>
+        <Button type="primary" size="large" onClick={handleOpenModal}>Оформить заказ</Button>
       </div>
     </section>      
   )
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.object.isRequired
+  data: PropTypes.array.isRequired
 }
 
 export default BurgerConstructor;
