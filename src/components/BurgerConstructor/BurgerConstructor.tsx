@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import img from '../../images/img.svg'
+import {menuItemPropTypes} from '../../utils/constants'
 
 const ConstructorEl = props => {
   return <li className={burgerConstructorStyles.constructorElement}>
@@ -15,15 +16,7 @@ const ConstructorEl = props => {
   </li>
 }
 
-ConstructorEl.propTypes = {
-  name: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  _id: PropTypes.string.isRequired,
-}
-
-const BurgerConstructor = ({data, handleOpenModal}) => {
-  
+const BurgerConstructor = ({data, handleOpenModal}) => {  
   
   return (
     <section className={burgerConstructorStyles.section + ' ml-4'}>
@@ -38,9 +31,9 @@ const BurgerConstructor = ({data, handleOpenModal}) => {
           />          
         </li>          
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {data.map(dataElement => {
+          {data.map((dataElement, index) => {
             if (dataElement.__v >= 0 && (dataElement.type === 'main' || dataElement.type === 'sauce')) {
-              return <ConstructorEl {...dataElement} key={dataElement._id}/>
+              return <ConstructorEl {...dataElement} key={index}/>
             }      
           })}                        
         </ul> 
@@ -66,7 +59,8 @@ const BurgerConstructor = ({data, handleOpenModal}) => {
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
+  dataElement: menuItemPropTypes
 }
 
 export default BurgerConstructor;

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
-
+import {menuItemPropTypes} from '../../utils/constants'
 
 const Card = ({dataElement, onClick}) => {
   
@@ -18,11 +18,7 @@ const Card = ({dataElement, onClick}) => {
 }
 
 Card.propTypes = {  
-  dataElement: PropTypes.shape({
-    name: PropTypes.string.isRequired,    
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired
-  }).isRequired,
+  dataElement: menuItemPropTypes,
   onClick: PropTypes.func.isRequired
 }
 
