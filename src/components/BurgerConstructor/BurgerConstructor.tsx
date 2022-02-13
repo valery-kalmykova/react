@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import img from '../../images/img.svg'
-import { data } from '../../utils/data.js'
+import {menuItemPropTypes} from '../../utils/constants'
 
 const ConstructorEl = props => {
   return <li className={burgerConstructorStyles.constructorElement}>
@@ -16,14 +16,8 @@ const ConstructorEl = props => {
   </li>
 }
 
-ConstructorEl.propTypes = {
-  name: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  _id: PropTypes.string.isRequired,
-}
-
-const BurgerConstructor = () => {  
+const BurgerConstructor = ({data, handleOpenModal}) => {  
+  
   return (
     <section className={burgerConstructorStyles.section + ' ml-4'}>
       <ul className={burgerConstructorStyles.elementsList + ' mt-25'}>
@@ -37,9 +31,9 @@ const BurgerConstructor = () => {
           />          
         </li>          
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {data.map(dataElement => {
-            if (dataElement.__v > 0 && (dataElement.type === 'main' || dataElement.type === 'sauce')) {
-              return <ConstructorEl {...dataElement} key={dataElement._id}/>
+          {data.map((dataElement, index) => {
+            if (dataElement.__v >= 0 && (dataElement.type === 'main' || dataElement.type === 'sauce')) {
+              return <ConstructorEl {...dataElement} key={index}/>
             }      
           })}                        
         </ul> 
@@ -58,10 +52,14 @@ const BurgerConstructor = () => {
           <p className="text text_type_digits-medium mr-2">610</p>
           <CurrencyIcon type="primary" />
         </div>          
-        <Button type="primary" size="large">Оформить заказ</Button>
+        <Button type="primary" size="large" onClick={handleOpenModal}>Оформить заказ</Button>
       </div>
     </section>      
   )
+}
+
+BurgerConstructor.propTypes = {
+  data: PropTypes.arrayOf(menuItemPropTypes.isRequired),  
 }
 
 export default BurgerConstructor;
