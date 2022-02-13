@@ -59,8 +59,7 @@ const BurgerConstructor = ({data, handleOpenModal}) => {
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.array.isRequired,
-  dataElement: menuItemPropTypes
+  data: PropTypes.arrayOf(menuItemPropTypes.isRequired),  
 }
 
 export default BurgerConstructor;

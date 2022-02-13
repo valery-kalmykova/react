@@ -17,8 +17,7 @@ const Card = ({dataElement, onClick}) => {
       </div>
 }
 
-Card.propTypes = {  
-  dataElement: menuItemPropTypes,
+Card.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
@@ -68,7 +67,7 @@ const BurgerIngredients = ({data, handleOpenModal}) => {
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.arrayOf(menuItemPropTypes.isRequired)
 }
 
 export default BurgerIngredients;
