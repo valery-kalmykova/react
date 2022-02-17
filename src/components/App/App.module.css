@@ -1,0 +1,11 @@
+.app {  
+  background-color: #131316;
+  height: 100vh;
+  overflow-y: hidden; 
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+}
+
