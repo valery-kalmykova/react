@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import {menuItemPropTypes} from '../../utils/constants'
+import { DataContext } from '../../services/dataContext';
 
-const Card = ({dataElement, onClick}) => {
-  
+const Card = ({dataElement, onClick}) => {  
   return <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick}>
         {/* <Counter count={1} size="default"/> */}
         <img className={burgerIngredientsStyles.cardImage + ' mr-4 ml-4'} src={dataElement.image} alt={dataElement.name} />
@@ -21,9 +21,11 @@ Card.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-const TypeCards = ({data, type, handleOpenModal}) => {  
+const TypeCards = ({type, handleOpenModal}) => {
+  const {productData, setData} = React.useContext(DataContext);
+
   return <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
-    {data.map(dataElement => {
+    {productData.map(dataElement => {
       if (dataElement.type === type) {
         return <Card dataElement={dataElement} key={dataElement._id} onClick={()=>handleOpenModal(dataElement)}/>
       }      
@@ -48,18 +50,18 @@ const TabSet = () => {
   )
 }
 
-const BurgerIngredients = ({data, handleOpenModal}) => {  
+const BurgerIngredients = ({handleOpenModal}) => {  
   return (
     <section className={burgerIngredientsStyles.section + ' mr-10'}>
       <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
      <TabSet/>
      <div className={burgerIngredientsStyles.scrollSection}>
         <h2 className='text text_type_main-medium mb-6'>Булки</h2>
-        <TypeCards data={data} type='bun' handleOpenModal={handleOpenModal}/>        
+        <TypeCards type='bun' handleOpenModal={handleOpenModal}/>        
        <h2 className='text text_type_main-medium mb-6 mt-10'>Соусы</h2>
-        <TypeCards data={data} type='main' handleOpenModal={handleOpenModal}/>
+        <TypeCards type='main' handleOpenModal={handleOpenModal}/>
        <h2 className='text text_type_main-medium mb-6 mt-10'>Начинки</h2>
-        <TypeCards data={data} type='sauce' handleOpenModal={handleOpenModal}/>
+        <TypeCards type='sauce' handleOpenModal={handleOpenModal}/>
       </div>
       
     </section>
@@ -67,7 +69,7 @@ const BurgerIngredients = ({data, handleOpenModal}) => {
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(menuItemPropTypes.isRequired)
+  productData: PropTypes.arrayOf(menuItemPropTypes.isRequired)
 }
 
 export default BurgerIngredients;

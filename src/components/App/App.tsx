@@ -6,59 +6,68 @@ import Modal from '../Modal/Modal'
 import OrderDetails from '../OrderDetails/OrderDetails'
 import IngredientDetails from '../IngredientDetails/IngredientDetails'
 import appStyle from './App.module.css';
+import { DataContext } from '../../services/dataContext';
 
 const url = 'https://norma.nomoreparties.space/api/ingredients';
 
-const App =  React.memo(() => {
-  const [state, setState] = useState({ 
-    productData: []       
-  })
+const App =  () => {  
+  const [productData, setData] = useState([]);  
   const [isVisibleIngDet, setIsVisibleIngDet] = useState(false);
   const [itemIngDet, setitemIngDet] = useState(null);
   const [isVisibleOrder, setIsVisibleOrder] = useState(false)
+  const [orderNumber, setOrderNumber] = useState(0);
 
    useEffect(() => {
-    const getProductData = async () => {
-      setState({...state});
+    const getProductData = async () => {      
       try {
         const res = await fetch(url);
         if (!res.ok) {
           throw new Error('Ответ сети был не ok.');
         }
         const data = await res.json();
-        setState({ productData: data.data });        
+        setData(data.data);               
       } catch(err) {
         console.log(err)
       }           
     }
      getProductData();     
-  }, [])
+  }, [])  
 
   const openIngDet = (item) => {
     setIsVisibleIngDet(true)
     setitemIngDet(item)
   }  
   const closeIngDet = () => {
-    setIsVisibleIngDet(!isVisibleIngDet)
+    setIsVisibleIngDet(false)
     setitemIngDet(null)
   }
-  const toggleOrder = () => setIsVisibleOrder(!isVisibleOrder)
+  
+  const openOrder = (orderNumber) => {
+    setIsVisibleOrder(true)
+    setOrderNumber(orderNumber)
+  }
+  const closeOrder = () => {
+    setIsVisibleOrder(false)
+    setOrderNumber(0)
+  }
 
   return (
     <div className={appStyle.app}>
       <AppHeader />
-      <div className={appStyle.main}>
-        <BurgerIngredients data={state.productData} handleOpenModal={openIngDet}/>
-        <BurgerConstructor data={state.productData} handleOpenModal={toggleOrder}/>        
-      </div>    
-      {isVisibleIngDet && <Modal title='Детали ингредиента' handleClose={closeIngDet}>        
-        <IngredientDetails item={itemIngDet}/>
-      </Modal>}
-      {isVisibleOrder && <Modal title='' handleClose={toggleOrder}>        
-        <OrderDetails />        
-      </Modal>}
+      <DataContext.Provider value={{ productData, setData }}>        
+        <div className={appStyle.main}>
+          <BurgerIngredients handleOpenModal={openIngDet}/>
+          <BurgerConstructor handleOpenModal={openOrder}/>        
+        </div>    
+        {isVisibleIngDet && <Modal title='Детали ингредиента' handleClose={closeIngDet}>        
+          <IngredientDetails item={itemIngDet}/>
+        </Modal>}
+        {isVisibleOrder && <Modal title='' handleClose={closeOrder}>
+          <OrderDetails orderNumber={orderNumber}/>        
+        </Modal>}        
+      </DataContext.Provider>
     </div>
   );
-})
+}
 
 export default App;
