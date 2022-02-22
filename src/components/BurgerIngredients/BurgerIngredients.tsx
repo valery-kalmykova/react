@@ -1,11 +1,15 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useState, useContext} from 'react';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
-import {menuItemPropTypes} from '../../utils/constants'
 import { DataContext } from '../../services/dataContext';
+import {menuItemProp} from '../../utils/constants'
 
-const Card = ({dataElement, onClick}) => {  
+interface CardProps {
+  dataElement: menuItemProp,
+  onClick: () => void
+}
+
+const Card: React.FC<CardProps> = ({dataElement, onClick}) => {  
   return <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick}>
         {/* <Counter count={1} size="default"/> */}
         <img className={burgerIngredientsStyles.cardImage + ' mr-4 ml-4'} src={dataElement.image} alt={dataElement.name} />
@@ -17,12 +21,13 @@ const Card = ({dataElement, onClick}) => {
       </div>
 }
 
-Card.propTypes = {
-  onClick: PropTypes.func.isRequired
+interface TypeCardsProps {
+  type: string,
+  handleOpenModal: (dataElement: {}) => void
 }
 
-const TypeCards = ({type, handleOpenModal}) => {
-  const {productData, setData} = React.useContext(DataContext);
+const TypeCards: React.FC<TypeCardsProps> = ({type, handleOpenModal}) => {
+  const {productData, setData} = useContext(DataContext);
 
   return <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
     {productData.map(dataElement => {
@@ -50,7 +55,11 @@ const TabSet = () => {
   )
 }
 
-const BurgerIngredients = ({handleOpenModal}) => {  
+interface BurgerIngredientsProps {
+  handleOpenModal: (dataElement: {}) => void
+}
+
+const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({handleOpenModal}) => {  
   return (
     <section className={burgerIngredientsStyles.section + ' mr-10'}>
       <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
@@ -66,10 +75,6 @@ const BurgerIngredients = ({handleOpenModal}) => {
       
     </section>
   );  
-}
-
-BurgerIngredients.propTypes = {
-  productData: PropTypes.arrayOf(menuItemPropTypes.isRequired)
 }
 
 export default BurgerIngredients;

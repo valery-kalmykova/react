@@ -1,9 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import orderDetailsStyle from './OrderDetails.module.css';
 import orderAccepted from '../../images/orderAccepted.svg'
 
-const OrderDetails = ({orderNumber}) => {
+interface OrderDetailsProps {  
+  orderNumber: number
+}
+
+const OrderDetails: React.FC<OrderDetailsProps> = ({orderNumber}) => {
   return (
     <div className={orderDetailsStyle.content}>
           <p className="text text_type_digits-large">{orderNumber}</p>
@@ -13,10 +16,6 @@ const OrderDetails = ({orderNumber}) => {
           <p className="text text_type_main-default text_color_inactive mt-2 pb-30">Дождитесь готовности на орбитальной станции</p>
         </div>
   )
-}
-
-OrderDetails.propTypes = {
-  orderNumber: PropTypes.number.isRequired, 
 }
 
 export default OrderDetails

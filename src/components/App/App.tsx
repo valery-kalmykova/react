@@ -7,13 +7,14 @@ import OrderDetails from '../OrderDetails/OrderDetails'
 import IngredientDetails from '../IngredientDetails/IngredientDetails'
 import appStyle from './App.module.css';
 import { DataContext } from '../../services/dataContext';
+import { menuItemProp, itemDefault } from '../../utils/constants'
 
 const url = 'https://norma.nomoreparties.space/api/ingredients';
 
-const App =  () => {  
-  const [productData, setData] = useState([]);  
+const App = () => {  
+  const [productData, setData] = useState<menuItemProp[]>([]);
   const [isVisibleIngDet, setIsVisibleIngDet] = useState(false);
-  const [itemIngDet, setitemIngDet] = useState(null);
+  const [itemIngDet, setitemIngDet] = useState<menuItemProp>(itemDefault);
   const [isVisibleOrder, setIsVisibleOrder] = useState(false)
   const [orderNumber, setOrderNumber] = useState(0);
 
@@ -39,7 +40,7 @@ const App =  () => {
   }  
   const closeIngDet = () => {
     setIsVisibleIngDet(false)
-    setitemIngDet(null)
+    setitemIngDet(itemDefault)
   }
   
   const openOrder = (orderNumber) => {
@@ -59,13 +60,13 @@ const App =  () => {
           <BurgerIngredients handleOpenModal={openIngDet}/>
           <BurgerConstructor handleOpenModal={openOrder}/>        
         </div>    
+      </DataContext.Provider>
         {isVisibleIngDet && <Modal title='Детали ингредиента' handleClose={closeIngDet}>        
           <IngredientDetails item={itemIngDet}/>
         </Modal>}
         {isVisibleOrder && <Modal title='' handleClose={closeOrder}>
           <OrderDetails orderNumber={orderNumber}/>        
-        </Modal>}        
-      </DataContext.Provider>
+        </Modal>}   
     </div>
   );
 }

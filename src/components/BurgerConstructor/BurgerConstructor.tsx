@@ -1,12 +1,13 @@
 import React, {useEffect, useContext, useState, useCallback} from 'react';
-import PropTypes from 'prop-types';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import {menuItemPropTypes} from '../../utils/constants'
 import { DataContext } from '../../services/dataContext';
 
+interface BurgerConstructorProps {
+  handleOpenModal: (orderNumber: number) => void
+}
 
-const BurgerConstructor = ({handleOpenModal}) => {  
+const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) => {  
   const { productData, setData } = useContext(DataContext);
 
   const [ totalPrice, setTotalPrice ] = useState(0);
@@ -25,10 +26,10 @@ const BurgerConstructor = ({handleOpenModal}) => {
     () => {      
       productData.map(dataElement => {
         if (dataElement.__v >= 1) {
-          setIdInOrder([...idInOrder, dataElement.id])
+          setIdInOrder([...idInOrder, dataElement._id])
         }
       })
-    }
+    }, [productData, setIdInOrder, idInOrder]
   )
 
   const sendOrder = useCallback(  
@@ -111,10 +112,6 @@ const BurgerConstructor = ({handleOpenModal}) => {
 
     </section>      
   )
-}
-
-BurgerConstructor.propTypes = {
-  productData: PropTypes.arrayOf(menuItemPropTypes.isRequired),  
 }
 
 export default BurgerConstructor;
