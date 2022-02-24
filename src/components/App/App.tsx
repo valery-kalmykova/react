@@ -13,8 +13,8 @@ const url = 'https://norma.nomoreparties.space/api/ingredients';
 
 const App = () => {  
   const [productData, setData] = useState<menuItemProp[]>([]);
-  const [isVisibleIngDet, setIsVisibleIngDet] = useState(false);
-  const [itemIngDet, setitemIngDet] = useState<menuItemProp>(itemDefault);
+  const [isVisibleIngredientDetail, setIsVisibleIngredientDetail] = useState(false);
+  const [itemIngredientDetail, setItemIngredientDetail] = useState<menuItemProp>(itemDefault);
   const [isVisibleOrder, setIsVisibleOrder] = useState(false)
   const [orderNumber, setOrderNumber] = useState(0);
 
@@ -26,7 +26,8 @@ const App = () => {
           throw new Error('Ответ сети был не ok.');
         }
         const data = await res.json();
-        setData(data.data);               
+        setData(data.data);
+        console.log(data.data)               
       } catch(err) {
         console.log(err)
       }           
@@ -34,13 +35,13 @@ const App = () => {
      getProductData();     
   }, [])  
 
-  const openIngDet = (item) => {
-    setIsVisibleIngDet(true)
-    setitemIngDet(item)
+  const openIngredientDetail = (item) => {
+    setIsVisibleIngredientDetail(true)
+    setItemIngredientDetail(item)
   }  
-  const closeIngDet = () => {
-    setIsVisibleIngDet(false)
-    setitemIngDet(itemDefault)
+  const closeIngredientDetail = () => {
+    setIsVisibleIngredientDetail(false)
+    setItemIngredientDetail(itemDefault)
   }
   
   const openOrder = (orderNumber) => {
@@ -57,12 +58,12 @@ const App = () => {
       <AppHeader />
       <DataContext.Provider value={{ productData, setData }}>        
         <div className={appStyle.main}>
-          <BurgerIngredients handleOpenModal={openIngDet}/>
+          <BurgerIngredients handleOpenModal={openIngredientDetail}/>
           <BurgerConstructor handleOpenModal={openOrder}/>        
         </div>    
       </DataContext.Provider>
-        {isVisibleIngDet && <Modal title='Детали ингредиента' handleClose={closeIngDet}>        
-          <IngredientDetails item={itemIngDet}/>
+        {isVisibleIngredientDetail && <Modal title='Детали ингредиента' handleClose={closeIngredientDetail}>        
+          <IngredientDetails item={itemIngredientDetail}/>
         </Modal>}
         {isVisibleOrder && <Modal title='' handleClose={closeOrder}>
           <OrderDetails orderNumber={orderNumber}/>        

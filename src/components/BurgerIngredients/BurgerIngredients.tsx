@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
-import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { DataContext } from '../../services/dataContext';
 import {menuItemProp} from '../../utils/constants'
 
@@ -10,8 +10,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({dataElement, onClick}) => {  
-  return <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick}>
-        {/* <Counter count={1} size="default"/> */}
+  return <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick}>       
         <img className={burgerIngredientsStyles.cardImage + ' mr-4 ml-4'} src={dataElement.image} alt={dataElement.name} />
         <div className={burgerIngredientsStyles.currency + ' mt-1 mb-1'}>
           <p className="text text_type_digits-default pr-2">{dataElement.price}</p>

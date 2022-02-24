@@ -2,6 +2,7 @@ import React, {useEffect, useContext, useState, useCallback} from 'react';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { DataContext } from '../../services/dataContext';
+import { menuItemProp } from '../../utils/constants'
 
 interface BurgerConstructorProps {
   handleOpenModal: (orderNumber: number) => void
@@ -11,12 +12,20 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
   const { productData, setData } = useContext(DataContext);
 
   const [ totalPrice, setTotalPrice ] = useState(0);
-  const [ idInOrder, setIdInOrder ] = useState(["60d3b41abdacab0026a733c6","60d3b41abdacab0026a733c8"]) //id для примера, потом удалить
+  const [ idInOrder, setIdInOrder ] = useState([
+    '60d3b41abdacab0026a733c6', 
+    '60d3b41abdacab0026a733c8', 
+    '60d3b41abdacab0026a733cc',
+    '60d3b41abdacab0026a733cd',
+    '60d3b41abdacab0026a733d0',
+    '60d3b41abdacab0026a733d3'
+  ]) //id для примера, потом удалить
 
+  const FilteredElementsInOrder = productData.filter(dataElement => idInOrder.includes(dataElement._id));
+  
   useEffect(
-    () => {
-      let total = 0;
-      productData.map(dataElement => (total += dataElement.price * dataElement.__v));
+    () => { 
+      const total = FilteredElementsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)
       setTotalPrice(total);
     },
     [productData, setTotalPrice]
@@ -25,14 +34,15 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
   useEffect (
     () => {      
       productData.map(dataElement => {
-        if (dataElement.__v >= 1) {
+        const countMinItemInOrder = 1;
+        if (dataElement.__v >= countMinItemInOrder) {
           setIdInOrder([...idInOrder, dataElement._id])
         }
       })
     }, [productData, setIdInOrder, idInOrder]
   )
-
-  const sendOrder = useCallback(  
+ 
+  const onClickHandler = useCallback(  
     async () => {
       const requestOptions = {
         method: 'POST',
@@ -54,52 +64,63 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
     }, [idInOrder, handleOpenModal]
   )
 
+  
+  interface CurrentBunElementProps {
+    type: "top" | "bottom" | undefined,
+    typeText: string,
+    dataElement: menuItemProp,
+  }
+
+  const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps): JSX.Element | null => {    
+    if (dataElement.type === 'bun') {
+      return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
+          <ConstructorElement
+            type={type}
+            isLocked={true}
+            text={dataElement.name + typeText}
+            price={dataElement.price}
+            thumbnail={dataElement.image}
+          />
+        </li>
+    }
+    return null 
+  }
+
+  interface CurrentnotBunElementProps {
+    dataElement: menuItemProp,    
+  }
+
+  const CurrentNotBunElement = ({dataElement}: CurrentnotBunElementProps): JSX.Element | null => {
+    if (dataElement.type !== 'bun') {
+      return <li className={burgerConstructorStyles.constructorElement}>
+      <DragIcon type="primary" />
+      <ConstructorElement    
+        text={dataElement.name}
+        price={dataElement.price}
+        thumbnail={dataElement.image}
+      />
+    </li>
+    }
+    return null
+  }
+
   return (
     <section className={burgerConstructorStyles.section + ' ml-4'}>
       <ul className={burgerConstructorStyles.elementsList + ' mt-25'}> 
 
-        {productData.map(dataElement => {          
-          if (dataElement.__v >= 1 && dataElement.type === 'bun') {
-            return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
-            <ConstructorElement
-              type='top'
-              isLocked={true}
-              text={dataElement.name + ' верх'}
-              price={dataElement.price}
-              thumbnail={dataElement.image}
-            />
-          </li>
-          }       
-        })}
+        {FilteredElementsInOrder.map((dataElement, index) => {
+          return <CurrentBunElement type='top' typeText=' верх' key={index} dataElement={dataElement}/>
+        })}        
 
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {productData.map((dataElement, index) => {            
-            if (dataElement.__v >= 1 && dataElement.type !== 'bun') {
-              return <li className={burgerConstructorStyles.constructorElement} key={index}>
-              <DragIcon type="primary" />
-              <ConstructorElement    
-                text={dataElement.name}
-                price={dataElement.price}
-                thumbnail={dataElement.image}
-              />
-            </li>
-            }
+          {FilteredElementsInOrder.map((dataElement, index) => {            
+            return <CurrentNotBunElement dataElement={dataElement} key={index}/>         
           })}
         </ul>
 
-        {productData.map(dataElement => {
-          if (dataElement.__v >= 1 && dataElement.type === 'bun') {
-            return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
-            <ConstructorElement
-              type='bottom'
-              isLocked={true}
-              text={dataElement.name + ' низ'}
-              price={dataElement.price}
-              thumbnail={dataElement.image}
-            />
-          </li>
-          }
-        })}
+        {FilteredElementsInOrder.map((dataElement, index) => {
+          return <CurrentBunElement type='bottom' typeText=' низ' key={index} dataElement={dataElement}/>
+        })} 
       
       </ul>
       <div className={burgerConstructorStyles.totals + ' mt-10'}>
@@ -107,7 +128,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
           <p className="text text_type_digits-medium mr-2">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>          
-        <Button type="primary" size="large" onClick={() => sendOrder()}>Оформить заказ</Button>
+        <Button type="primary" size="large" onClick={onClickHandler}>Оформить заказ</Button>
       </div>
 
     </section>      
