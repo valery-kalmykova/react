@@ -1,15 +1,69 @@
 import React, {useEffect, useContext, useState, useCallback} from 'react';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { DataContext } from '../../services/dataContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { getItems } from '../../services/actions/products'
 import { menuItemProp } from '../../utils/constants'
+
+interface CurrentBunElementProps {
+  type: "top" | "bottom" | undefined,
+  typeText: string,
+  dataElement: menuItemProp,
+}
+
+const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps): JSX.Element | null => {    
+  if (dataElement.type === 'bun') {
+    return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
+        <ConstructorElement
+          type={type}
+          isLocked={true}
+          text={dataElement.name + typeText}
+          price={dataElement.price}
+          thumbnail={dataElement.image}
+        />
+      </li>
+  }
+  return null 
+}
+
+interface CurrentnotBunElementProps {
+  dataElement: menuItemProp,    
+}
+
+const CurrentNotBunElement = ({dataElement}: CurrentnotBunElementProps): JSX.Element | null => {
+  if (dataElement.type !== 'bun') {
+    return <li className={burgerConstructorStyles.constructorElement}>
+    <DragIcon type="primary" />
+    <ConstructorElement    
+      text={dataElement.name}
+      price={dataElement.price}
+      thumbnail={dataElement.image}
+    />
+  </li>
+  }
+  return null
+}
 
 interface BurgerConstructorProps {
   handleOpenModal: (orderNumber: number) => void
 }
 
+interface RootState {
+  products:{ 
+    productData: menuItemProp[]
+  }
+}
+
 const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) => {  
-  const { productData, setData } = useContext(DataContext);
+  const dispatch = useDispatch();
+  const productData = useSelector((state:RootState) => state.products.productData);
+
+  useEffect(
+    () => {
+      dispatch(getItems());
+    },
+    [dispatch]
+  );
 
   const [ totalPrice, setTotalPrice ] = useState(0);
   const [ idInOrder, setIdInOrder ] = useState([
@@ -21,14 +75,14 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
     '60d3b41abdacab0026a733d3'
   ]) //id для примера, потом удалить
 
-  const FilteredElementsInOrder = productData.filter(dataElement => idInOrder.includes(dataElement._id));
+  const filteredElementsInOrder = productData.filter(dataElement => idInOrder.includes(dataElement._id));
   
   useEffect(
     () => { 
-      const total = FilteredElementsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)
+      const total = filteredElementsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)
       setTotalPrice(total);
     },
-    [productData, setTotalPrice]
+    [productData, setTotalPrice, filteredElementsInOrder]
   );
 
   useEffect (
@@ -64,61 +118,22 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
     }, [idInOrder, handleOpenModal]
   )
 
-  
-  interface CurrentBunElementProps {
-    type: "top" | "bottom" | undefined,
-    typeText: string,
-    dataElement: menuItemProp,
-  }
-
-  const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps): JSX.Element | null => {    
-    if (dataElement.type === 'bun') {
-      return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
-          <ConstructorElement
-            type={type}
-            isLocked={true}
-            text={dataElement.name + typeText}
-            price={dataElement.price}
-            thumbnail={dataElement.image}
-          />
-        </li>
-    }
-    return null 
-  }
-
-  interface CurrentnotBunElementProps {
-    dataElement: menuItemProp,    
-  }
-
-  const CurrentNotBunElement = ({dataElement}: CurrentnotBunElementProps): JSX.Element | null => {
-    if (dataElement.type !== 'bun') {
-      return <li className={burgerConstructorStyles.constructorElement}>
-      <DragIcon type="primary" />
-      <ConstructorElement    
-        text={dataElement.name}
-        price={dataElement.price}
-        thumbnail={dataElement.image}
-      />
-    </li>
-    }
-    return null
-  }
 
   return (
     <section className={burgerConstructorStyles.section + ' ml-4'}>
       <ul className={burgerConstructorStyles.elementsList + ' mt-25'}> 
 
-        {FilteredElementsInOrder.map((dataElement, index) => {
+        {filteredElementsInOrder.map((dataElement, index) => {
           return <CurrentBunElement type='top' typeText=' верх' key={index} dataElement={dataElement}/>
         })}        
 
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {FilteredElementsInOrder.map((dataElement, index) => {            
+          {filteredElementsInOrder.map((dataElement, index) => {            
             return <CurrentNotBunElement dataElement={dataElement} key={index}/>         
           })}
         </ul>
 
-        {FilteredElementsInOrder.map((dataElement, index) => {
+        {filteredElementsInOrder.map((dataElement, index) => {
           return <CurrentBunElement type='bottom' typeText=' низ' key={index} dataElement={dataElement}/>
         })} 
       

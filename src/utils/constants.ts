@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface menuItemProp {
   _id: string,
   name: string,
@@ -29,3 +27,5 @@ export const itemDefault = {
     image_large: '',
     __v: 0,
 }
+
+export const url = 'https://norma.nomoreparties.space/api/ingredients';
