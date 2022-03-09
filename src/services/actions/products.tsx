@@ -41,8 +41,7 @@ export function getItems() {
       )    
       .then(res => res.json())
       .then(json => {
-        dispatch(fetchProductsSuccess(json.data));
-        console.log(json.data)       
+        dispatch(fetchProductsSuccess(json.data));              
         return json.data;       
       })
       .catch(error => dispatch(fetchProductsFailed(error)));
