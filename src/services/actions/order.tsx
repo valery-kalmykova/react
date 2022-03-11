@@ -1,5 +1,5 @@
-import { AppDispatch } from '../../index'
-import { urlOrder } from '../../utils/constants'
+import { AppDispatch } from '../reducers/store'
+import { baseUrl, checkResponse } from '../../utils/constants'
 
 export const GET_ORDER_REQUEST = 'GET_ORDER_REQUEST';
 export const GET_ORDER_SUCCESS = 'GET_ORDER_SUCCESS';
@@ -7,6 +7,8 @@ export const GET_ORDER_FAILED = 'GET_ORDER_FAILED';
 
 export const HANDLE_OPEN_ORDER = 'HANDLE_OPEN_ORDER';
 export const HANDLE_CLOSE_ORDER = 'HANDLE_CLOSE_ORDER';
+
+export const CLEAR_CONSTRUCTOR = 'CLEAR_CONSTRUCTOR';
 
 export const fetchOrderRequest = () => ({
   type: GET_ORDER_REQUEST
@@ -31,6 +33,10 @@ export const handleCloseOrder = () => ({
   type: HANDLE_CLOSE_ORDER  
 });
 
+export const clearConstructor = () => ({
+  type: CLEAR_CONSTRUCTOR  
+});
+
 export function getOrderNumber(idInOrder: String[]) {
   return async (dispatch: AppDispatch) => {
     const requestOptions = {
@@ -40,19 +46,13 @@ export function getOrderNumber(idInOrder: String[]) {
     };
     try {
       dispatch(fetchOrderRequest());
-      return fetch(urlOrder, requestOptions)
-        .then(res => {
-          if (!res.ok) {
-            throw Error(res.statusText);
-          }
-          return res;
-          }        
-        )    
-        .then(res => res.json())
+      return fetch(baseUrl + '/orders', requestOptions)
+        .then(checkResponse) 
         .then(json => {
-          dispatch(fetchOrderSuccess(json.order.number));          
-          return json.order.number;
-        })
+          dispatch(fetchOrderSuccess(json.order.number));  
+          dispatch(clearConstructor());                
+          return json.order.number;        
+        })        
       }    
     catch(error: any) {
       dispatch(fetchOrderFailed(error))

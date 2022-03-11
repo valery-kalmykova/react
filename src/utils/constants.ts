@@ -10,7 +10,8 @@ export interface menuItemProp {
   image: string,
   image_mobile: string,
   image_large: string,
-  __v: number,  
+  __v: number,
+  uuid?: string
 };
 
 export const itemDefault = {
@@ -28,5 +29,11 @@ export const itemDefault = {
     __v: 0,
 }
 
-export const urlData = 'https://norma.nomoreparties.space/api/ingredients';
-export const urlOrder = 'https://norma.nomoreparties.space/api/orders'
+export const baseUrl = 'https://norma.nomoreparties.space/api';
+
+export function checkResponse(res: any) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
+}

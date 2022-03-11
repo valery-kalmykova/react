@@ -12,6 +12,7 @@
   left: 50%;
   transform: translate(-50%, -50%);  
   width: 640px;  
+  min-height: 400px;
   background-color: #1C1C21;
   z-index: 101;
   border-radius: 40px;

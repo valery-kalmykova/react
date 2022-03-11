@@ -3,12 +3,14 @@ import {
   GET_ITEMS_REQUEST,
   GET_ITEMS_SUCCESS,
   ADD_DRAGGED_ELEMENTS,
+  SET_KEY_VALUE,
   DELETE_DRAGGED_ELEMENTS,
   DELETE_PREV_BUN_ELEMENT,
   INCREASE_COUNT_ELEMENTS_IN_ORDER,
   DECREASE_COUNT_ELEMENTS_IN_ORDER,
-  SORT_INGRIDIENTS_IN_CONSTRUCTOR,
+  SORT_INGRIDIENTS_IN_CONSTRUCTOR  
 } from '../actions/products'
+import { CLEAR_CONSTRUCTOR } from '../actions/order'
 import { AnyAction } from 'redux';
 import { menuItemProp } from '../../utils/constants';
 
@@ -66,12 +68,19 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
     case ADD_DRAGGED_ELEMENTS: {
       return {
         ...state,
-        bunIngridientInOrder: [...state.bunIngridientInOrder, ...state.productData.filter((element: {_id: string}) => 
+        bunIngridientInOrder: [...state.bunIngridientInOrder, ...state.productData.filter((element: menuItemProp) => 
           element._id === action.dataElement._id && action.dataElement.type === 'bun')],
-        notBunIngridientsInOrder: [...state.notBunIngridientsInOrder, ...state.productData.filter((element: {_id: string}) => 
-          element._id === action.dataElement._id && (action.dataElement.type === 'main' || action.dataElement.type === 'sauce'))],
+        notBunIngridientsInOrder: [...state.notBunIngridientsInOrder, ...state.productData.filter((element: menuItemProp) => 
+          element._id === action.dataElement._id && (action.dataElement.type === 'main' || action.dataElement.type === 'sauce'))],       
       }
-    }    
+    }  
+    case SET_KEY_VALUE: {
+      return {
+        ...state,
+        productData: [...state.productData].map((element: menuItemProp) =>
+         element._id === action.payload.dataElement._id ? { ...element, uuid: action.key } : element),        
+      }
+    }
     case INCREASE_COUNT_ELEMENTS_IN_ORDER: {
       return {
         ...state,
@@ -89,8 +98,8 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
     case DELETE_DRAGGED_ELEMENTS: {
       return {
         ...state,
-        notBunIngridientsInOrder: [...state.notBunIngridientsInOrder].filter((element) => 
-        [...state.notBunIngridientsInOrder].indexOf(element) !== action.key)
+        notBunIngridientsInOrder: [...state.notBunIngridientsInOrder].filter((element: menuItemProp) => 
+        element.uuid !== action.dataElement.uuid)
       }
     }
     case DELETE_PREV_BUN_ELEMENT: {
@@ -105,6 +114,15 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         notBunIngridientsInOrder: action.newSortIndridients
+      }
+    }
+    case CLEAR_CONSTRUCTOR: {
+      return {
+        ...state,
+        notBunIngridientsInOrder: [],
+        bunIngridientInOrder: [],
+        productData: [...state.productData].map((element: menuItemProp) => 
+        (element.__v > 0) ? { ...element, __v: 0} : element),
       }
     }
 

@@ -49,7 +49,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
     () => { 
       const totalnotBunIngridients = notBunIngridientsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0);
       const bunIngridient = bunIngridientInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)    
-      setTotalPrice(totalnotBunIngridients + bunIngridient); 
+      setTotalPrice(totalnotBunIngridients + bunIngridient);   
     }, [setTotalPrice, notBunIngridientsInOrder, bunIngridientInOrder]
   ); 
 
@@ -64,10 +64,10 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
     return newArr
   },[])
 
-  const onClickHandler = useCallback(() => { 
+  const onClickOrderHandler = useCallback(() => { 
     const idInOrder: string[] = getIdsInOrder(productData);    
     dispatch(getOrderNumber(idInOrder));    
-    handleOpenModal(orderNumber);
+    handleOpenModal(orderNumber);    
   },[getIdsInOrder, dispatch, handleOpenModal, orderNumber, productData])
 
 
@@ -78,7 +78,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
     });    
     dispatch({
       type: DELETE_DRAGGED_ELEMENTS,
-      key
+      dataElement
     })    
   }
 
@@ -94,30 +94,38 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
       newSortIndridients
     }) 
   }, [dispatch, notBunIngridientsInOrder])
+
+  const disabled = (totalPrice === 0 || bunIngridientInOrder.length === 0)
  
    return (
     <section className={burgerConstructorStyles.section + ' ml-4'} ref={dropTarget}>
       <ul className={burgerConstructorStyles.elementsList + ' mt-25'}> 
 
         {bunIngridientInOrder.map((dataElement, index) => {
-          return <CurrentBunElement type='top' typeText=' верх' key={index} dataElement={dataElement}/>
+          return (
+            <CurrentBunElement type='top' typeText=' верх' key={index} dataElement={dataElement}/>
+          ) 
         })}        
 
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
           {notBunIngridientsInOrder.map((dataElement, index) => {            
-            return <CurrentNotBunElement 
-            dataElement={dataElement} 
-            key={index}
-            id={dataElement._id}
-            index={index} 
-            onClickdelete={()=>onClickDelete(dataElement, index)}                      
-            moveCard={moveCard}            
-            />         
+            return (
+              <CurrentNotBunElement 
+                dataElement={dataElement} 
+                key={dataElement.uuid}
+                id={dataElement._id}
+                index={index} 
+                onClickdelete={()=>onClickDelete(dataElement, index)}                      
+                moveCard={moveCard}            
+              />
+            )         
           })}
         </ul>
 
         {bunIngridientInOrder.map((dataElement, index) => {
-          return <CurrentBunElement type='bottom' typeText=' низ' key={index} dataElement={dataElement}/>
+          return (
+            <CurrentBunElement type='bottom' typeText=' низ' key={index} dataElement={dataElement}/>
+          )
         })} 
       
       </ul>
@@ -126,7 +134,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
           <p className="text text_type_digits-medium mr-2">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>          
-        <Button type="primary" size="large" onClick={onClickHandler} disabled={totalPrice === 0}>Оформить заказ</Button>
+        <Button type="primary" size="large" onClick={onClickOrderHandler} disabled={disabled}>Оформить заказ</Button>
       </div>
 
     </section>      

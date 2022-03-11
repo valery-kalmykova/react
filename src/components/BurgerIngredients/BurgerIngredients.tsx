@@ -20,7 +20,8 @@ const Card: React.FC<CardProps> = ({dataElement, onClick}) => {
 
   const elInCostructor = (dataElement.__v > 0)
   
-  return <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick} ref={dragRef}>
+  return (
+    <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick} ref={dragRef}>
         {elInCostructor && <Counter count={dataElement.__v} size="default" />}
         <img className={burgerIngredientsStyles.cardImage + ' mr-4 ml-4'} src={dataElement.image} alt={dataElement.name} />
         <div className={burgerIngredientsStyles.currency + ' mt-1 mb-1'}>
@@ -29,6 +30,7 @@ const Card: React.FC<CardProps> = ({dataElement, onClick}) => {
         </div>
         <p className={burgerIngredientsStyles.cardTitle + " text text_type_main-default"}>{dataElement.name}</p>
       </div>
+  ) 
 }
 
 interface TypeCardsProps {
@@ -44,17 +46,19 @@ interface RootState {
 }
 
 const TypeCards: React.FC<TypeCardsProps> = ({type, handleOpenModal, productData}) => {
-  return <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
-    {productData.map((dataElement) => {
-      if (dataElement.type === type) {
-        return <Card 
-        dataElement={dataElement} 
-        key={dataElement._id} 
-        onClick={()=>handleOpenModal(dataElement)}
-        />
-      }      
-    })}
-  </div>
+  return (
+    <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
+      {productData.map((dataElement) => {
+        if (dataElement.type === type) {
+          return <Card 
+          dataElement={dataElement} 
+          key={dataElement._id} 
+          onClick={()=>handleOpenModal(dataElement)}
+          />
+        }      
+      })}
+    </div>
+  ) 
 }
 
 interface BurgerIngredientsProps {
@@ -93,18 +97,22 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({handleOpenModal}) 
 		}
 	}, [onScreenbun, onScreensauce, onScreenMain, setCurrent]);
 
+  const scrollTo = (ref: RefObject<HTMLHeadingElement>) => {
+    ref.current && ref.current.scrollIntoView()
+  }
+
   return (
     <section className={burgerIngredientsStyles.section + ' mr-10'}>
       <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
      
       <div style={{ display: 'flex' }} className='mb-10'>
-        <Tab value="Булки" active={currentTab === 'bun'} onClick={setCurrent}>
+        <Tab value="Булки" active={currentTab === 'bun'} onClick={() => scrollTo(bun)}>
           Булки
         </Tab>
-        <Tab value="Соусы" active={currentTab === 'sauce'} onClick={setCurrent}>
+        <Tab value="Соусы" active={currentTab === 'sauce'} onClick={() => scrollTo(sauce)}>
           Соусы
         </Tab>
-        <Tab value="Начинки" active={currentTab === 'main'} onClick={setCurrent}>
+        <Tab value="Начинки" active={currentTab === 'main'} onClick={() => scrollTo(main)}>
           Начинки
         </Tab>
       </div>

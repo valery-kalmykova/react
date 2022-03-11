@@ -1,18 +1,19 @@
 import React from 'react';
-import AppHeader from '../AppHeader/AppHeader'
-import BurgerConstructor from '../BurgerConstructor/BurgerConstructor'
-import BurgerIngredients from '../BurgerIngredients/BurgerIngredients'
-import Modal from '../Modal/Modal'
-import OrderDetails from '../OrderDetails/OrderDetails'
-import IngredientDetails from '../IngredientDetails/IngredientDetails'
+import AppHeader from '../AppHeader/AppHeader';
+import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
+import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
+import Modal from '../Modal/Modal';
+import OrderDetails from '../OrderDetails/OrderDetails';
+import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import appStyle from './App.module.css';
 import { menuItemProp } from '../../utils/constants'
 import { useDispatch, useSelector } from 'react-redux';
-import { handleOpenIngredientDetail, handleCloseIngredientDetail } from '../../services/actions/ingredientDetail'
-import { handleOpenOrder, handleCloseOrder } from '../../services/actions/order'
+import { handleOpenIngredientDetail, handleCloseIngredientDetail } from '../../services/actions/ingredientDetail';
+import { handleOpenOrder, handleCloseOrder } from '../../services/actions/order';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { ADD_DRAGGED_ELEMENTS, INCREASE_COUNT_ELEMENTS_IN_ORDER, DELETE_PREV_BUN_ELEMENT} from '../../services/actions/products'
+import { ADD_DRAGGED_ELEMENTS, INCREASE_COUNT_ELEMENTS_IN_ORDER, DELETE_PREV_BUN_ELEMENT, setKeyValue} from '../../services/actions/products';
+import { Loader } from '../../ui/Loader/Loader'
 
 
 const App = () => { 
@@ -24,15 +25,16 @@ const App = () => {
       isVisibleModal: boolean,
     },
     order: {
-      order: number,
-      isVisibleModal: boolean
+      orderNumber: number,
+      isVisibleModalOrder: boolean,
+      orderRequest: boolean
     }
   }
   const itemIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.item);
   const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
 
-  const orderNumber = useSelector((state: RootState) => state.order.order);
-  const isVisibleModalOrder = useSelector((state: RootState) => state.order.isVisibleModal); 
+  const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
+ 
 
   const openIngredientDetail = (item: menuItemProp) => {    
     dispatch(handleOpenIngredientDetail(item))
@@ -53,7 +55,8 @@ const App = () => {
       dispatch({
         type: DELETE_PREV_BUN_ELEMENT
       })
-    }
+    }; 
+    dispatch(setKeyValue(dataElement));
     dispatch({
       type: ADD_DRAGGED_ELEMENTS,
       dataElement
@@ -61,7 +64,7 @@ const App = () => {
     dispatch({
       type: INCREASE_COUNT_ELEMENTS_IN_ORDER,
       dataElement
-    });  
+    });     
   };
 
   return (
@@ -77,7 +80,7 @@ const App = () => {
           <IngredientDetails item={itemIngredientDetail}/>
         </Modal>}
         {isVisibleModalOrder && <Modal title='' handleClose={closeOrder}>
-          <OrderDetails orderNumber={orderNumber}/>        
+          {orderRequest ? <Loader size="large" inverse={true}/> : <OrderDetails orderNumber={orderNumber}/>}        
         </Modal>}   
     </div>
   );

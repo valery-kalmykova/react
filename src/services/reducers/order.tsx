@@ -3,20 +3,20 @@ import {
   HANDLE_CLOSE_ORDER,
   GET_ORDER_FAILED,
   GET_ORDER_REQUEST,
-  GET_ORDER_SUCCESS,
+  GET_ORDER_SUCCESS,  
 } from '../actions/order';
 import { AnyAction } from 'redux';
 
 interface iinitialState { 
-  order: number,
-  isVisibleModal: boolean,
+  orderNumber: number,
+  isVisibleModalOrder: boolean,
   orderRequest: boolean,
   orderFailed: boolean,
 }
 
 const initialState:iinitialState = {
-  order: 0,
-  isVisibleModal: false,
+  orderNumber: 0,
+  isVisibleModalOrder: false,
   orderRequest: false,
   orderFailed: false,
 }
@@ -26,15 +26,15 @@ export const orderReducer = (state = initialState, action: AnyAction) => {
     case HANDLE_OPEN_ORDER: {
       return {
         ...state,
-        order: action.payload.order,
-        isVisibleModal: true
+        orderNumber: action.payload.order,
+        isVisibleModalOrder: true
       }
     }
     case HANDLE_CLOSE_ORDER: {
       return {
         ...state,
-        order: 0,
-        isVisibleModal: false
+        orderNumber: 0,
+        isVisibleModalOrder: false
       }
     }
 
@@ -50,7 +50,7 @@ export const orderReducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         orderFailed: false,
-        order: action.payload.order,
+        orderNumber: action.payload.order,
         orderRequest: false,
       }      
     }
@@ -60,7 +60,7 @@ export const orderReducer = (state = initialState, action: AnyAction) => {
         ...state,
         orderFailed: true, 
         orderRequest: false,
-        order: 0
+        orderNumber: 0
       }
     }
 

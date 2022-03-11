@@ -66,16 +66,17 @@ const CurrentNotBunElement = ({dataElement, onClickdelete, id, index, moveCard}:
   const opacity = isDragging ? .5 : 1
   drag(drop(ref))    
   
-  return <li className={burgerConstructorStyles.constructorElement} ref={ref} data-handler-id={handlerId} style={{ opacity }}>
-    <DragIcon type="primary" />
-    <ConstructorElement    
-      text={dataElement.name}
-      price={dataElement.price}
-      thumbnail={dataElement.image}    
-      handleClose={onClickdelete}  
-    />
-  </li>
- 
+  return (
+    <li className={burgerConstructorStyles.constructorElement} ref={ref} data-handler-id={handlerId} style={{ opacity }}>
+      <DragIcon type="primary" />
+      <ConstructorElement    
+        text={dataElement.name}
+        price={dataElement.price}
+        thumbnail={dataElement.image}    
+        handleClose={onClickdelete}  
+      />
+    </li>
+  ) 
 }
 
 export default CurrentNotBunElement;

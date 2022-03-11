@@ -12,7 +12,8 @@ interface CurrentBunElementProps {
 
 const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps): JSX.Element | null => {    
   
-  return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
+  return (
+    <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
       <ConstructorElement
         type={type}
         isLocked={true}
@@ -21,6 +22,7 @@ const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps)
         thumbnail={dataElement.image}
       />          
     </li>
+  )
 }
 
 export default CurrentBunElement;
