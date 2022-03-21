@@ -1,0 +1,48 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 88px);
+}
+
+.profileMain {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 120px auto 0;
+  max-width: 1280px;
+  justify-content: flex-start
+}
+
+.sideBlock {
+  max-width: 320px;
+}
+
+.nav {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navLink {
+  min-height: 64px;
+  display:flex;
+  align-items:center;
+}
+
+.items {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item :global(.input__container) :global(.input_size_default) {
+  width: 480px;
+}
+
+.bottomText :global(.button_button_size_medium__LIAFz) {
+  padding: 0;
+  padding-left: 10px;
+}
+ 
