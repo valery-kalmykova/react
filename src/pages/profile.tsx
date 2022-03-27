@@ -20,11 +20,10 @@ const Profile = () => {
   const dispatch = useDispatch(); 
   const history = useHistory();
   const name = useSelector((state:RootState) => state.user.user.name);
-  const login = useSelector((state:RootState) => state.user.user.email);
-  const isLoading = useSelector((state:RootState) => state.user.getRequest);
+  const login = useSelector((state:RootState) => state.user.user.email);  
   const [newUserData, setNewUserData] = useState({
-    name: '',
-    email: '',
+    name: name,
+    email: login,
     password: 'Новый пароль'
   });
 
@@ -33,21 +32,6 @@ const Profile = () => {
     login: false,
     password: false
   });
-
-  // const init = async() => {
-  //   await dispatch(getUser());    
-  //   setNewUserData({
-  //     ...newUserData,
-  //     name: name,
-  //     email: login
-  //   })
-  // }
-  // useEffect(
-  //   () => {
-  //     init()
-  //   },
-  //   []
-  // );
 
   const submitHandler = useCallback(
     () => {
@@ -111,7 +95,7 @@ const Profile = () => {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </div>
-      {isLoading ? <Loader size="large" inverse={true}/> : <div>
+      <div>
         <ul className={styles.items}>
           <li className={styles.item + ' mb-6'}>
             <Input 
@@ -154,7 +138,7 @@ const Profile = () => {
           <Button type="primary" size="medium" onClick={submitHandler}>Сохранить</Button>
           <Button type="primary" size="medium" onClick={cancelHandler}>Отмена</Button>
         </div>
-      </div>}
+      </div>
     </div>
   )
 }
