@@ -8,30 +8,21 @@ import Register from '../../pages/register'
 import ForgotPassword from '../../pages/forgotPassword'
 import ResetPassword from '../../pages/resetPassword'
 import Profile from '../../pages/profile'
+import NotFound from '../../pages/notFound'
+import ProtectedRoute from '../ProtectedRoute/protectedRoute'
 
 const App = () => {  
   return (
     <Router>
       <div className={appStyle.app}>
         <AppHeader />
-        <Route path="/" exact={true}>
-          <HomePage />
-        </Route>
-        <Route path="/login" exact={true}>
-          <Login />
-        </Route>
-        <Route path="/register" exact={true}>
-          <Register />
-        </Route>
-        <Route path="/forgot-password" exact={true}>
-          <ForgotPassword />
-        </Route>
-        <Route path="/reset-password" exact={true}>
-          <ResetPassword />
-        </Route>
-        <Route path="/profile" exact={true}>
-          <Profile />
-        </Route>
+        <Route exact path='/' component={HomePage}/>
+        <Route exact path='/login' component={Login}/>
+        <Route exact path='/register' component={Register}/>
+        <Route exact path='/forgot-password' component={ForgotPassword}/>
+        <Route exact path='/reset-password' component={ResetPassword}/>
+        <Route exact path='/404' component={NotFound}/>        
+        <ProtectedRoute exact path='/profile' component={Profile}/>        
       </div>
     </Router>
     

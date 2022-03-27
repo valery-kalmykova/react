@@ -31,6 +31,16 @@
   align-items:center;
 }
 
+.link {
+  text-decoration: none;
+  color: var(--text-inactive-color)
+}
+
+.activeLink {
+  text-decoration: none;
+  color: var(--text-primary-color)
+}
+
 .items {
   list-style-type: none;
   padding: 0;
@@ -45,4 +55,14 @@
   padding: 0;
   padding-left: 10px;
 }
- 
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.logoutBtn{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}

@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import appHeaderStyles from './AppHeader.module.css';
 import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 const AppHeader = () => {   
+  const history = useHistory();
+  const toMain = useCallback(
+    () => {
+        history.replace({ pathname: '/' });
+    },
+    [history]
+  );
+
+  const profile = useCallback(
+    () => {
+        history.replace({ pathname: '/profile' });
+    },
+    [history]
+  );
+
   return (
     <header className={appHeaderStyles.header}>
       <div className={appHeaderStyles.headerContainer}>
@@ -18,11 +34,11 @@ const AppHeader = () => {
             </li>
           </ul>
         </nav>
-        <div className={appHeaderStyles.logo}><Logo /></div>          
-        <div className={appHeaderStyles.autorization + ' pr-5 pl-5 pt-4 pb-4 mb-4 mt-4'}>
-          <ProfileIcon type="primary" />
-          <p className="text text_type_main-default ml-2 text_color_inactive">Личный кабинет</p>
-        </div>
+        <button className={appHeaderStyles.logo} onClick={toMain}><Logo /></button>          
+        <button className={appHeaderStyles.autorization + ' pr-5 pl-5 pt-4 pb-4 mb-4 mt-4'} onClick={profile}>
+          <ProfileIcon type="primary" />          
+            <p className="text text_type_main-default ml-2 text_color_inactive">Личный кабинет</p>          
+        </button>
       </div>
     </header>
   );  

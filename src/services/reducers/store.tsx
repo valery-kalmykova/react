@@ -1,6 +1,7 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import { rootReducer } from './index';
 import thunk from 'redux-thunk';
+import { useDispatch } from 'react-redux';
 
 declare global {
   interface Window {
@@ -14,4 +15,4 @@ const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 export const store = createStore(rootReducer, enhancer);
 
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;

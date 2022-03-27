@@ -27,13 +27,17 @@ const HomePage = () => {
       orderNumber: number,
       isVisibleModalOrder: boolean,
       orderRequest: boolean
+    },
+    user: {
+      user: {}
     }
   }
   const itemIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.item);
   const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
 
   const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
- 
+  // const user = useSelector((state: RootState) => state.user);
+  // console.log(user.user)
 
   const openIngredientDetail = (item: menuItemProp) => {    
     dispatch(handleOpenIngredientDetail(item))

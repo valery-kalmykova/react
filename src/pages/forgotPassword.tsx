@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import styles from './login.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components'
-
+import { forgotPassword } from '../services/actions/password'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState(''); 
+
+  const history = useHistory();
+  const login = useCallback(
+    () => {
+        history.replace({ pathname: '/login' });
+    },
+    [history]
+  );
+
+  const dispatch = useDispatch();
+
+  const submitHandler = async () => {  
+    await dispatch(forgotPassword(email));
+    history.replace({ pathname: '/reset-password' });
+  };
   
   return (
     <div className={styles.main}>
@@ -20,15 +37,14 @@ const ForgotPassword = () => {
           />
         </li>        
       </ul>
-      <Button type="primary" size="medium">Зарегистрироваться</Button>
+      <Button type="primary" size="medium" onClick={submitHandler}>Восстановить</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Вспомнили пароль?
-          <Button type="secondary" size="medium">
-            Войти
-          </Button>
+        <Button type="secondary" size="medium" onClick={login}>Войти</Button>  
       </p>      
     </div>
   )
 }
 
 export default ForgotPassword
+                                                                                                                                                                
