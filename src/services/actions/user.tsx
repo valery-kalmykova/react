@@ -54,8 +54,7 @@ export function loginUser(userData: userData) {
         .then(res => {
           dispatch(loginUserSuccess(res));
           localStorage.setItem('accessToken', res.accessToken.split('Bearer ')[1])
-          localStorage.setItem('refreshToken', res.refreshToken)
-          console.log(res)          
+          localStorage.setItem('refreshToken', res.refreshToken);                    
           return res;        
         })        
       }    
@@ -137,8 +136,7 @@ export function getUser() {
       return fetchWithAuth(baseUrl + '/auth/user', requestOptions)         
         .then(checkResponse)  
         .then(res => {
-          dispatch(getUserSuccess(res));      
-          console.log(res.success)    
+          dispatch(getUserSuccess(res));   
           return res.success;        
         })        
       }    
@@ -224,7 +222,7 @@ export function logoutUser() {
         .then(res => {
           dispatch(logoutUserSuccess(res));
           localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');          
+          localStorage.removeItem('refreshToken');              
           return res;        
         })        
       }    

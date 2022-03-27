@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getOrderNumber } from '../../services/actions/order';
 import { menuItemProp } from '../../utils/constants';
 import { useDrop } from "react-dnd";
+import { useHistory } from 'react-router-dom';
 import update from 'immutability-helper';
 import { 
   DELETE_DRAGGED_ELEMENTS, 
@@ -32,12 +33,15 @@ interface RootState {
 
 const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, onDropHandler}) => {  
   const dispatch = useDispatch();  
+  const history = useHistory();
   const bunIngridientInOrder = useSelector((state: RootState) => state.products.bunIngridientInOrder);
   const notBunIngridientsInOrder = useSelector((state: RootState) => state.products.notBunIngridientsInOrder);
   const productData = useSelector((state: RootState) => state.products.productData);
   const orderNumber = useSelector((state: RootState) => state.order.order);
   const [ totalPrice, setTotalPrice ] = useState(0);
- 
+  const isUserLoaded = localStorage.getItem('accessToken');  
+  const disabled = (totalPrice === 0 || bunIngridientInOrder.length === 0);
+   
   const [, dropTarget] = useDrop({
     accept: "item",    
     drop(dataElement: menuItemProp) {
@@ -63,12 +67,16 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
     })    
     return newArr
   },[])
-
-  const onClickOrderHandler = useCallback(() => { 
-    const idInOrder: string[] = getIdsInOrder(productData);    
-    dispatch(getOrderNumber(idInOrder));    
-    handleOpenModal(orderNumber);    
-  },[getIdsInOrder, dispatch, handleOpenModal, orderNumber, productData])
+   
+  const onClickOrderHandler = useCallback(() => {     
+    if(!isUserLoaded) {
+      history.replace({ pathname: '/login' });
+    } else {     
+      const idInOrder: string[] = getIdsInOrder(productData);     
+      dispatch(getOrderNumber(idInOrder));    
+      handleOpenModal(orderNumber); 
+    }       
+  },[getIdsInOrder, dispatch, handleOpenModal, orderNumber, productData, history, isUserLoaded])
 
 
   const onClickDelete = (dataElement: menuItemProp, key: number) => {
@@ -93,9 +101,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
       type: SORT_INGRIDIENTS_IN_CONSTRUCTOR,
       newSortIndridients
     }) 
-  }, [dispatch, notBunIngridientsInOrder])
-
-  const disabled = (totalPrice === 0 || bunIngridientInOrder.length === 0)
+  }, [dispatch, notBunIngridientsInOrder])  
  
    return (
     <section className={burgerConstructorStyles.section + ' ml-4'} ref={dropTarget}>

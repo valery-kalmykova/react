@@ -4,31 +4,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './login.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { getUser, changeUser, logoutUser } from '../services/actions/user';
+import { Loader } from '../ui/Loader/Loader'
 
+interface RootState {
+  user: {
+    user: {
+      name: string,
+      email: string
+    },
+    getRequest: boolean
+  }
+}
 
 const Profile = () => {
   const dispatch = useDispatch(); 
   const history = useHistory();
-  useEffect(
-    () => {
-      dispatch(getUser());
-    },
-    [dispatch]
-  );
-  interface RootState {
-    user: {
-      user: {
-        name: string,
-        email: string
-      }
-    }
-  }
   const name = useSelector((state:RootState) => state.user.user.name);
   const login = useSelector((state:RootState) => state.user.user.email);
-    
+  const isLoading = useSelector((state:RootState) => state.user.getRequest);
   const [newUserData, setNewUserData] = useState({
-    name: name,
-    email: login,
+    name: '',
+    email: '',
     password: 'Новый пароль'
   });
 
@@ -37,6 +33,21 @@ const Profile = () => {
     login: false,
     password: false
   });
+
+  // const init = async() => {
+  //   await dispatch(getUser());    
+  //   setNewUserData({
+  //     ...newUserData,
+  //     name: name,
+  //     email: login
+  //   })
+  // }
+  // useEffect(
+  //   () => {
+  //     init()
+  //   },
+  //   []
+  // );
 
   const submitHandler = useCallback(
     () => {
@@ -100,23 +111,23 @@ const Profile = () => {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </div>
-      <div>
+      {isLoading ? <Loader size="large" inverse={true}/> : <div>
         <ul className={styles.items}>
           <li className={styles.item + ' mb-6'}>
             <Input 
-              value={name}              
+              value={newUserData.name}              
               onChange={e =>setNewUserData({...newUserData, name: e.target.value})}
               name={'name'}   
               type={'text'}
               placeholder={'Имя'}
               icon={'EditIcon'}
-              disabled={disabled.name ? false : true}
+              disabled={disabled.name ? false : true}              
               onIconClick={()=>setDisabled({...disabled, name: !disabled.name})}                         
             />
           </li>
           <li className={styles.item + ' mb-6'}>
             <Input 
-              value={login} 
+              value={newUserData.email} 
               onChange={e => setNewUserData({...newUserData, email: e.target.value})}
               name={'login'}   
               type={'email'}
@@ -143,7 +154,7 @@ const Profile = () => {
           <Button type="primary" size="medium" onClick={submitHandler}>Сохранить</Button>
           <Button type="primary" size="medium" onClick={cancelHandler}>Отмена</Button>
         </div>
-      </div>
+      </div>}
     </div>
   )
 }

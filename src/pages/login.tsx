@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/actions/user';
 import styles from './login.module.css';
@@ -12,10 +12,11 @@ const Login = () => {
   })
   const dispatch = useDispatch();
   const history = useHistory();
+  const { state } = useLocation();
 
   const submitHandler = async () => {  
     await dispatch(loginUser(userData));
-    history.replace({ pathname: '/' });
+    history.replace({ pathname: state?.from || '/' });
   };
 
   const register = useCallback(
@@ -39,11 +40,7 @@ const Login = () => {
   const isUserLoaded = localStorage.getItem('accessToken');
   if(isUserLoaded) {
     return(
-      <Redirect
-        to={{
-          pathname: '/'
-        }}
-      />
+      <Redirect to={ state?.from || '/' }/>
     )
   }
 

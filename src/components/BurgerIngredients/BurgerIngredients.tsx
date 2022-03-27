@@ -2,7 +2,6 @@ import React, {useState, useEffect, useRef, RefObject} from 'react';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDispatch, useSelector } from 'react-redux';
-import { getItems } from '../../services/actions/products'
 import { menuItemProp } from '../../utils/constants'
 import { useDrag } from "react-dnd";
 import { useOnScreen } from './useOnScreen'
@@ -77,13 +76,6 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({handleOpenModal}) 
   const onScreenMain = useOnScreen(main);
   const onScreensauce = useOnScreen(sauce);
   const onScreenbun = useOnScreen(bun);
-
-  useEffect(
-    () => {
-      dispatch(getItems());      
-    },
-    [dispatch]
-  );
 
   useEffect(() => {
 		if (onScreenMain) {

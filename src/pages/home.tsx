@@ -14,9 +14,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { ADD_DRAGGED_ELEMENTS, INCREASE_COUNT_ELEMENTS_IN_ORDER, DELETE_PREV_BUN_ELEMENT, setKeyValue} from '../services/actions/products';
 import { Loader } from '../ui/Loader/Loader'
 
-
 const HomePage = () => { 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();  
 
   interface RootState {
     ingredientDetail:{ 
@@ -36,8 +35,6 @@ const HomePage = () => {
   const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
 
   const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
-  // const user = useSelector((state: RootState) => state.user);
-  // console.log(user.user)
 
   const openIngredientDetail = (item: menuItemProp) => {    
     dispatch(handleOpenIngredientDetail(item))

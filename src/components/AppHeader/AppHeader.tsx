@@ -4,7 +4,7 @@ import appHeaderStyles from './AppHeader.module.css';
 import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 const AppHeader = () => {   
-  const history = useHistory();
+  const history = useHistory();  
   const toMain = useCallback(
     () => {
         history.replace({ pathname: '/' });
