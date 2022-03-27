@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './login.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { getUser, changeUser, logoutUser } from '../services/actions/user';
-import { Loader } from '../ui/Loader/Loader'
+import { changeUser, logoutUser } from '../services/actions/user';
 
 interface RootState {
   user: {

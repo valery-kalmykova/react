@@ -44,8 +44,11 @@ export const userDefault = {
 export const baseUrl = 'https://norma.nomoreparties.space/api';
 
 export function checkResponse(res: any) {
-  if (res) {
+  if (res.ok) {
+    return res.json();    
+  } else if (res.status === 401) {
     return res.json();
-  }
-  return Promise.reject(`Ошибка ${res.status}`);
+  } else {
+    return Promise.reject(`Ошибка ${res.status}`);
+  }  
 }
