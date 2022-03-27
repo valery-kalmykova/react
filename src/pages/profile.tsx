@@ -10,8 +10,7 @@ interface RootState {
     user: {
       name: string,
       email: string
-    },
-    getRequest: boolean
+    }
   }
 }
 
