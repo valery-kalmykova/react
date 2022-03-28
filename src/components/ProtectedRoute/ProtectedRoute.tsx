@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { Loader } from '../../ui/Loader/Loader';
 import { getUser } from '../../services/actions/user'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers';
 
-export default function ProtectedRouteAuth({ component: Component, ...restOfProps }) { 
+export default function ProtectedRoute({ component: Component, ...restOfProps }) { 
   const token = localStorage.getItem('accessToken');
   const dispatch = useDispatch();  
   

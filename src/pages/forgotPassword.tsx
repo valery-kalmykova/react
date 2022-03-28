@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './login.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { forgotPassword } from '../services/actions/password';
 import { mailformat } from '../utils/constants';
+import { RootState } from '../services/reducers';
 
 const ForgotPassword = () => {
   const history = useHistory();
@@ -12,7 +13,8 @@ const ForgotPassword = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState(''); 
   const [hasError, setHasError] = useState(false);
-  const disabledSubmit = (email === '' || hasError)
+  const disabledSubmit = (email === '' || hasError);
+  const keySendSuccess = useSelector((state: RootState) => state.password)
 
   const login = useCallback(
     () => {
@@ -23,7 +25,9 @@ const ForgotPassword = () => {
 
   const submitHandler = async () => {  
     await dispatch(forgotPassword(email));
-    history.replace({ pathname: '/reset-password', state: {from: history.location.pathname} });
+    if (keySendSuccess) {      
+      history.replace({ pathname: '/reset-password' });
+    }   
   };
   
   return (

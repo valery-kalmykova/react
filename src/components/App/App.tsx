@@ -9,7 +9,7 @@ import ForgotPassword from '../../pages/forgotPassword'
 import ResetPassword from '../../pages/resetPassword'
 import Profile from '../../pages/profile'
 import NotFound from '../../pages/notFound'
-import ProtectedRouteAuth from '../ProtectedRoute/ProtectedRouteAuth';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { getItems } from '../../services/actions/products';
 import { useDispatch } from 'react-redux';
 
@@ -21,6 +21,7 @@ const App = () => {
     },
     [dispatch]
   );
+  const keySendSuccess = localStorage.getItem('keySendSuccess')
 
   return (
     <Router forceRefresh={true}>
@@ -30,9 +31,9 @@ const App = () => {
         <Route exact path='/login' component={Login}/>
         <Route exact path='/register' component={Register}/>
         <Route exact path='/forgot-password' component={ForgotPassword}/>
-        <Route exact path='/reset-password' component={ResetPassword}/>
+        <Route exact path='/reset-password' component={keySendSuccess ? ResetPassword : ForgotPassword }/>
         <Route exact path='/404' component={NotFound}/>        
-        <ProtectedRouteAuth exact path='/profile' component={Profile}/>        
+        <ProtectedRoute exact path='/profile' component={Profile}/>        
       </div>
     </Router>
     

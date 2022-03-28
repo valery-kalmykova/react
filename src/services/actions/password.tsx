@@ -36,8 +36,9 @@ export function forgotPassword(email: string) {
       dispatch(forgotPasswordRequest());
       return fetch(baseUrl + '/password-reset', requestOptions)
         .then(checkResponse) 
-        .then(res => {
-          dispatch(forgotPasswordSuccess(res));
+        .then(res => {          
+          dispatch(forgotPasswordSuccess(res));   
+          localStorage.setItem('keySendSuccess', res.success)          
           return res;        
         })        
       }    
@@ -78,7 +79,8 @@ export function resetPassword(data: {password: string, secretKey: string}) {
       return fetch(baseUrl + '/password-reset/reset', requestOptions)
         .then(checkResponse) 
         .then(res => {
-          dispatch(resetPasswordSuccess(res));  
+          dispatch(resetPasswordSuccess(res));
+          localStorage.removeItem('keySendSuccess');
           return res;        
         })        
       }    

@@ -37,7 +37,7 @@ const Profile = () => {
     hasError.password ||
     hasError.name
   )
-  console.log(window.performance)
+  
   const submitHandler = async () => {
     await dispatch(changeUser(newUserData));
     setDisabled({

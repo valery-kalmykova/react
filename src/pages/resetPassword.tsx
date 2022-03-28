@@ -17,7 +17,7 @@ const ResetPassword = () => {
     password === '' ||
     hasError
   )
-  console.log(history.location.state)
+  
   const onIconClick = () => {
     setPasswordShow(!passwordShow)
   }

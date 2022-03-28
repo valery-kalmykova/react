@@ -22,7 +22,7 @@ const initialState:iinitialState = {
   resetPasswordFailed: false,
 }
 
-export const userReducer = (state = initialState, action: AnyAction) => {
+export const passwordReducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case FORGOT_PASSWORD_REQUEST: {
       return {

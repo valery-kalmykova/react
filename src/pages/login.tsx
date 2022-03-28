@@ -27,8 +27,7 @@ const Login = () => {
     setPasswordShow(!passwordShow)
   }
 
-  const submitHandler = async () => { 
-    console.log(userData) 
+  const submitHandler = async () => {     
     await dispatch(loginUser(userData)); 
     history.replace({ pathname: state?.from || '/' });
   };
@@ -48,12 +47,12 @@ const Login = () => {
     [history]
   );
   
-  // const isUserLoaded = localStorage.getItem('accessToken');
-  // if(isUserLoaded) {
-  //   return(
-  //     <Redirect to={ state?.from || '/' }/>
-  //   )
-  // }
+  const isUserLoaded = localStorage.getItem('accessToken');
+  if(isUserLoaded) {
+    return(
+      <Redirect to={ state?.from || '/' }/>
+    )
+  }
 
   return (
     <div className={styles.main}>
