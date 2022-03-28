@@ -41,12 +41,6 @@
   color: var(--text-primary-color)
 }
 
-.items {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
 .item :global(.input__container) :global(.input_size_default) {
   width: 480px;
 }

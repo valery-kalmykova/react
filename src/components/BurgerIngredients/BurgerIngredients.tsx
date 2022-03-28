@@ -4,7 +4,8 @@ import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger
 import { useDispatch, useSelector } from 'react-redux';
 import { menuItemProp } from '../../utils/constants'
 import { useDrag } from "react-dnd";
-import { useOnScreen } from './useOnScreen'
+import { useOnScreen } from './useOnScreen';
+import { RootState } from '../../services/reducers';
 
 interface CardProps {
   dataElement: menuItemProp,
@@ -38,11 +39,6 @@ interface TypeCardsProps {
   productData: menuItemProp[],
 }
 
-interface RootState {
-  products:{ 
-    productData: menuItemProp[],    
-  }
-}
 
 const TypeCards: React.FC<TypeCardsProps> = ({type, handleOpenModal, productData}) => {
   return (

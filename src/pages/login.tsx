@@ -1,23 +1,38 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/actions/user';
 import styles from './login.module.css';
-import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { mailformat } from '../utils/constants';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { state } = useLocation();
   const [userData, setUserData] = useState({
     email: '',
     password: '',    
   })
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const { state } = useLocation();
+  const [hasError, setHasError] = useState({
+    email: false,
+    password: false, 
+  });
+  const [passwordShow, setPasswordShow] = useState(false);   
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const disabled = userData.email === '' || userData.password === '' || hasError.email || hasError.password
+  
+  const onIconClick = () => {
+    setPasswordShow(!passwordShow)
+  }
 
-  const submitHandler = async () => {  
-    await dispatch(loginUser(userData));
+  const submitHandler = async () => { 
+    console.log(userData) 
+    await dispatch(loginUser(userData)); 
     history.replace({ pathname: state?.from || '/' });
   };
+  
 
   const register = useCallback(
     () => {
@@ -33,39 +48,59 @@ const Login = () => {
     [history]
   );
   
-  const onChangePassword = e => {
-    setUserData({...userData, password: e.target.value})
-  }
-
-  const isUserLoaded = localStorage.getItem('accessToken');
-  if(isUserLoaded) {
-    return(
-      <Redirect to={ state?.from || '/' }/>
-    )
-  }
+  // const isUserLoaded = localStorage.getItem('accessToken');
+  // if(isUserLoaded) {
+  //   return(
+  //     <Redirect to={ state?.from || '/' }/>
+  //   )
+  // }
 
   return (
     <div className={styles.main}>
       <h2 className='text text_type_main-medium mb-6'>Вход</h2>
-      <ul className={styles.items}>
-        <li className={styles.item + ' mb-6'}>
+      <form className={styles.items}>
+        <div className={styles.item + ' mb-6'}>
           <Input 
             value={userData.email} 
-            onChange={e => setUserData({...userData, email: e.target.value})}
+            onChange={e => {
+              setUserData({...userData, email: e.target.value})
+              if (emailRef.current && !emailRef.current.value.match(mailformat)) {
+                setHasError({...hasError, email: true})
+              } else {
+                setHasError({...hasError, email: false})
+              }
+            }}
             name={'email'}   
             type={'email'}
-            placeholder={'Email'}                               
+            placeholder={'Email'}
+            error={hasError.email}
+            errorText={'Введите корректный e-mail'}
+            ref={emailRef}                         
           />
-        </li>
-        <li className={styles.item + ' mb-6'}>
-          <PasswordInput 
+        </div>
+        <div className={styles.item + ' mb-6'}>          
+          <Input 
             value={userData.password} 
-            onChange={onChangePassword}
-            name={'password'}
+            onChange={e => {
+              setUserData({...userData, password: e.target.value});              
+              if (passwordRef.current && passwordRef.current.value.length < 5) {
+                setHasError({...hasError, password: true})                
+              } else {
+                setHasError({...hasError, password: false})
+              }
+            }}
+            name={'password'} 
+            placeholder={'Пароль'}
+            type={passwordShow ? 'text': 'password'}
+            icon={passwordShow ? 'HideIcon' : 'ShowIcon'}              
+            onIconClick={onIconClick}
+            error={hasError.password}
+            errorText={'Ошибка'}
+            ref={passwordRef}                            
           />
-        </li>
-      </ul>
-      <Button type="primary" size="medium" onClick={submitHandler}>Войти</Button>
+        </div>
+      </form>
+      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabled}>Войти</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Вы - новый пользователь?          
           <Button type="secondary" size="medium" onClick={register}>Зарегистрироваться</Button>          

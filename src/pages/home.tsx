@@ -12,25 +12,12 @@ import { handleOpenOrder, handleCloseOrder } from '../services/actions/order';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { ADD_DRAGGED_ELEMENTS, INCREASE_COUNT_ELEMENTS_IN_ORDER, DELETE_PREV_BUN_ELEMENT, setKeyValue} from '../services/actions/products';
-import { Loader } from '../ui/Loader/Loader'
+import { Loader } from '../ui/Loader/Loader';
+import { RootState } from '../services/reducers';
 
 const HomePage = () => { 
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch(); 
 
-  interface RootState {
-    ingredientDetail:{ 
-      item: menuItemProp,
-      isVisibleModal: boolean,
-    },
-    order: {
-      orderNumber: number,
-      isVisibleModalOrder: boolean,
-      orderRequest: boolean
-    },
-    user: {
-      user: {}
-    }
-  }
   const itemIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.item);
   const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
 

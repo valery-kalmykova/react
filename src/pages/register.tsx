@@ -1,25 +1,34 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../services/actions/user';
 import styles from './login.module.css';
-import { PasswordInput, Input, Button } from '@ya.praktikum/react-developer-burger-ui-components'
-
+import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { mailformat } from '../utils/constants';
 
 const Register = () => { 
+  const dispatch = useDispatch(); 
+  const history = useHistory();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null); 
   const [userData, setUserData] = useState({
     email: '',
     password: '',
     name: '',
   })
-  const dispatch = useDispatch(); 
-
-  const onChangePassword = e => {    
-    setUserData({...userData, password: e.target.value})   
-  }
-
-  const history = useHistory();
-
+  const [hasError, setHasError] = useState({
+    name: false,
+    email: false,
+    password: false 
+  });
+  const disabledSubmit = (userData.email === '' || 
+    userData.password === '' || 
+    userData.name === '' ||
+    hasError.email || 
+    hasError.password ||
+    hasError.name
+  )
+  
   const login = useCallback(
     () => {
         history.replace({ pathname: '/login' });
@@ -35,37 +44,61 @@ const Register = () => {
   return (
     <div className={styles.main}>
       <h2 className='text text_type_main-medium mb-6'>Регистрация</h2>
-      <ul className={styles.items}>
-      <li className={styles.item + ' mb-6'}>
+      <form className={styles.items}>
+        <div className={styles.item + ' mb-6'}>          
           <Input 
-            value={userData.name} 
-            onChange={e => setUserData({...userData, name: e.target.value})}
+            value={userData.name}              
+            onChange={e =>setUserData({...userData, name: e.target.value})}
             name={'name'}   
-            type={'text'}
-            placeholder={'Имя'}               
+            type={'text'}              
+            placeholder={'Имя'}              
+            error={hasError.name}
+            errorText={'Ошибка'}                        
           />
-        </li>
-        <li className={styles.item + ' mb-6'}>
+        </div>
+        <div className={styles.item + ' mb-6'}>
           <Input 
             value={userData.email} 
-            onChange={e => setUserData({...userData, email: e.target.value})}
-            name={'email'}   
+            onChange={e => {
+              setUserData({...userData, email: e.target.value});
+              if (emailRef.current && !emailRef.current.value.match(mailformat)) {
+                setHasError({...hasError, email: true})
+              } else {
+                setHasError({...hasError, email: false})
+              }
+            }}
+            name={'login'}   
             type={'email'}
-            placeholder={'Email'}               
+            placeholder={'Email'}              
+            error={hasError.email}
+            errorText={'Введите корректный e-mail'} 
+            ref={emailRef}                             
           />
-        </li>
-        <li className={styles.item + ' mb-6'}>
-          <PasswordInput 
+        </div>
+        <div className={styles.item + ' mb-6'}>
+          <Input 
             value={userData.password} 
-            onChange={onChangePassword}
-            name={'password'}
+            onChange={e => {
+              setUserData({...userData, password: e.target.value});
+              if (passwordRef.current && passwordRef.current.value.length < 5) {
+                setHasError({...hasError, password: true})                
+              } else {
+                setHasError({...hasError, password: false})
+              }
+            }}
+            name={'password'}   
+            type={'password'}
+            placeholder={'Пароль'}            
+            error={hasError.password}
+            errorText={'Пароль должен содержать не менее 5 символов'}
+            ref={passwordRef}
           />
-        </li>
-      </ul>
-      <Button type="primary" size="medium" onClick={submitHandler}>Зарегистрироваться</Button>
+        </div>
+      </form>
+      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Зарегистрироваться</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Уже зарегистрированы?          
-          <Button type="secondary" size="medium" onClick={login}>Войти</Button>          
+        <Button type="secondary" size="medium" onClick={login}>Войти</Button>          
       </p>      
     </div>
   )

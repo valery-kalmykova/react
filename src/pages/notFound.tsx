@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './login.module.css';
-import { Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 
 const NotFound = () => {

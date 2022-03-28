@@ -52,3 +52,5 @@ export function checkResponse(res: any) {
     return Promise.reject(`Ошибка ${res.status}`);
   }  
 }
+
+export const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

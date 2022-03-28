@@ -1,65 +1,75 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './login.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { changeUser, logoutUser } from '../services/actions/user';
-
-interface RootState {
-  user: {
-    user: {
-      name: string,
-      email: string
-    }
-  }
-}
+import { RootState } from '../services/reducers';
+import { mailformat } from '../utils/constants';
 
 const Profile = () => {
   const dispatch = useDispatch(); 
   const history = useHistory();
   const name = useSelector((state:RootState) => state.user.user.name);
-  const login = useSelector((state:RootState) => state.user.user.email);  
+  const email = useSelector((state:RootState) => state.user.user.email);
+    
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);  
   const [newUserData, setNewUserData] = useState({
     name: name,
-    email: login,
+    email: email,
     password: 'Новый пароль'
   });
-
   const [disabled, setDisabled] = useState({
     name: false,
-    login: false,
+    email: false,
     password: false
   });
-
-  const submitHandler = useCallback(
-    () => {
-      dispatch(changeUser(newUserData));
-      setDisabled({
-        ...disabled,
-        name: false,
-        login: false,
-        password: false
-      })
-    },
-    [dispatch, newUserData, disabled]
-  );
+  const [hasError, setHasError] = useState({
+    name: false,
+    email: false,
+    password: false 
+  });
+  const disabledSubmit = (newUserData.email === '' || 
+    newUserData.password === '' || 
+    newUserData.name === '' ||
+    hasError.email || 
+    hasError.password ||
+    hasError.name
+  )
+  console.log(window.performance)
+  const submitHandler = async () => {
+    await dispatch(changeUser(newUserData));
+    setDisabled({
+      ...disabled,
+      name: false,
+      email: false,
+      password: false
+    })
+  }    
 
   const cancelHandler = useCallback(
     () => {
         setNewUserData({
           ...newUserData,
           name: name,
-          email: login,
+          email: email,
           password: 'Новый пароль'
         });
         setDisabled({
           ...disabled,
           name: false,
-          login: false,
+          email: false,
+          password: false
+        });
+        setHasError ({
+          ...hasError,
+          name: false,
+          email: false,
           password: false
         })
     },
-    [newUserData, disabled, name, login]
+    [newUserData, disabled, name, email, hasError]
   );
 
   const logout = async () => {  
@@ -94,46 +104,68 @@ const Profile = () => {
         </p>
       </div>
       <div>
-        <ul className={styles.items}>
-          <li className={styles.item + ' mb-6'}>
+        <form className={styles.items}>
+          <div className={styles.item + ' mb-6'}>
             <Input 
               value={newUserData.name}              
               onChange={e =>setNewUserData({...newUserData, name: e.target.value})}
               name={'name'}   
-              type={'text'}
+              type={'text'}              
               placeholder={'Имя'}
               icon={'EditIcon'}
               disabled={disabled.name ? false : true}              
-              onIconClick={()=>setDisabled({...disabled, name: !disabled.name})}                         
+              onIconClick={()=>setDisabled({...disabled, name: !disabled.name})} 
+              error={hasError.name}
+              errorText={'Ошибка'}                        
             />
-          </li>
-          <li className={styles.item + ' mb-6'}>
+          </div>
+          <div className={styles.item + ' mb-6'}>
             <Input 
               value={newUserData.email} 
-              onChange={e => setNewUserData({...newUserData, email: e.target.value})}
+              onChange={e => {
+                setNewUserData({...newUserData, email: e.target.value});
+                if (emailRef.current && !emailRef.current.value.match(mailformat)) {
+                  setHasError({...hasError, email: true})
+                } else {
+                  setHasError({...hasError, email: false})
+                }
+              }}
               name={'login'}   
               type={'email'}
               placeholder={'Логин'}
               icon={'EditIcon'}
-              disabled={disabled.login ? false : true}
-              onIconClick={()=>setDisabled({...disabled, login: !disabled.login})}                               
+              disabled={disabled.email ? false : true}
+              onIconClick={()=>setDisabled({...disabled, email: !disabled.email})}
+              error={hasError.email}
+              errorText={'Введите корректный e-mail'} 
+              ref={emailRef}                             
             />
-          </li>
-          <li className={styles.item + ' mb-6'}>
+          </div>
+          <div className={styles.item + ' mb-6'}>
             <Input 
               value={newUserData.password} 
-              onChange={e => setNewUserData({...newUserData, password: e.target.value})}
+              onChange={e => {
+                setNewUserData({...newUserData, password: e.target.value});
+                if (passwordRef.current && passwordRef.current.value.length < 5) {
+                  setHasError({...hasError, password: true})                
+                } else {
+                  setHasError({...hasError, password: false})
+                }
+              }}
               name={'password'}   
               type={disabled.password ? 'text': 'password'}
               placeholder={'Пароль'}
               icon={'EditIcon'}   
               disabled={disabled.password ? false : true}
-              onIconClick={()=>setDisabled({...disabled, password: !disabled.password})}                              
+              onIconClick={()=>setDisabled({...disabled, password: !disabled.password})}
+              error={hasError.password}
+              errorText={'Пароль должен содержать не менее 5 символов'}
+              ref={passwordRef}
             />
-          </li>
-        </ul>
+          </div>
+        </form>
         <div className={styles.buttons + ' mt-10'}>
-          <Button type="primary" size="medium" onClick={submitHandler}>Сохранить</Button>
+          <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Сохранить</Button>
           <Button type="primary" size="medium" onClick={cancelHandler}>Отмена</Button>
         </div>
       </div>

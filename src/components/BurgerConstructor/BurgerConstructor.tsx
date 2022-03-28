@@ -14,21 +14,11 @@ import {
 } from '../../services/actions/products';
 import CurrentBunElement from './BunElement';
 import CurrentNotBunElement from './NotBunElement';
+import { RootState } from '../../services/reducers';
 
 interface BurgerConstructorProps {
   handleOpenModal: (orderNumber: number) => void,
   onDropHandler: (dataElement: menuItemProp) => void
-}
-
-interface RootState {
-  products:{
-    notBunIngridientsInOrder: menuItemProp[],
-    bunIngridientInOrder: menuItemProp[], 
-    productData: menuItemProp[]
-  },  
-  order: {
-    order: number
-  }
 }
 
 const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, onDropHandler}) => {  
@@ -37,7 +27,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
   const bunIngridientInOrder = useSelector((state: RootState) => state.products.bunIngridientInOrder);
   const notBunIngridientsInOrder = useSelector((state: RootState) => state.products.notBunIngridientsInOrder);
   const productData = useSelector((state: RootState) => state.products.productData);
-  const orderNumber = useSelector((state: RootState) => state.order.order);
+  const orderNumber = useSelector((state: RootState) => state.order.orderNumber);
   const [ totalPrice, setTotalPrice ] = useState(0);
   const isUserLoaded = localStorage.getItem('accessToken');  
   const disabled = (totalPrice === 0 || bunIngridientInOrder.length === 0);

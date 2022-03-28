@@ -9,20 +9,21 @@ import ForgotPassword from '../../pages/forgotPassword'
 import ResetPassword from '../../pages/resetPassword'
 import Profile from '../../pages/profile'
 import NotFound from '../../pages/notFound'
-import ProtectedRoute from '../ProtectedRoute/protectedRoute';
-import { getItems } from '../../services/actions/products'
+import ProtectedRouteAuth from '../ProtectedRoute/ProtectedRouteAuth';
+import { getItems } from '../../services/actions/products';
 import { useDispatch } from 'react-redux';
 
 const App = () => { 
-  const dispatch = useDispatch();   
+  const dispatch = useDispatch();
   useEffect(
     () => {
       dispatch(getItems());          
     },
     [dispatch]
   );
+
   return (
-    <Router>
+    <Router forceRefresh={true}>
       <div className={appStyle.app}>
         <AppHeader />
         <Route exact path='/' component={HomePage}/>
@@ -31,7 +32,7 @@ const App = () => {
         <Route exact path='/forgot-password' component={ForgotPassword}/>
         <Route exact path='/reset-password' component={ResetPassword}/>
         <Route exact path='/404' component={NotFound}/>        
-        <ProtectedRoute exact path='/profile' component={Profile}/>        
+        <ProtectedRouteAuth exact path='/profile' component={Profile}/>        
       </div>
     </Router>
     
