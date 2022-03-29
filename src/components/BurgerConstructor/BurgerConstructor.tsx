@@ -1,125 +1,131 @@
-import React, {useEffect, useContext, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback } from 'react';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
-import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { DataContext } from '../../services/dataContext';
-import { menuItemProp } from '../../utils/constants'
+import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrderNumber } from '../../services/actions/order';
+import { menuItemProp } from '../../utils/constants';
+import { useDrop } from "react-dnd";
+import update from 'immutability-helper';
+import { 
+  DELETE_DRAGGED_ELEMENTS, 
+  DECREASE_COUNT_ELEMENTS_IN_ORDER, 
+  SORT_INGRIDIENTS_IN_CONSTRUCTOR,
+} from '../../services/actions/products';
+import CurrentBunElement from './BunElement';
+import CurrentNotBunElement from './NotBunElement';
 
 interface BurgerConstructorProps {
-  handleOpenModal: (orderNumber: number) => void
+  handleOpenModal: (orderNumber: number) => void,
+  onDropHandler: (dataElement: menuItemProp) => void
 }
 
-const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) => {  
-  const { productData, setData } = useContext(DataContext);
+interface RootState {
+  products:{
+    notBunIngridientsInOrder: menuItemProp[],
+    bunIngridientInOrder: menuItemProp[], 
+    productData: menuItemProp[]
+  },  
+  order: {
+    order: number
+  }
+}
 
+const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, onDropHandler}) => {  
+  const dispatch = useDispatch();  
+  const bunIngridientInOrder = useSelector((state: RootState) => state.products.bunIngridientInOrder);
+  const notBunIngridientsInOrder = useSelector((state: RootState) => state.products.notBunIngridientsInOrder);
+  const productData = useSelector((state: RootState) => state.products.productData);
+  const orderNumber = useSelector((state: RootState) => state.order.order);
   const [ totalPrice, setTotalPrice ] = useState(0);
-  const [ idInOrder, setIdInOrder ] = useState([
-    '60d3b41abdacab0026a733c6', 
-    '60d3b41abdacab0026a733c8', 
-    '60d3b41abdacab0026a733cc',
-    '60d3b41abdacab0026a733cd',
-    '60d3b41abdacab0026a733d0',
-    '60d3b41abdacab0026a733d3'
-  ]) //id для примера, потом удалить
-
-  const FilteredElementsInOrder = productData.filter(dataElement => idInOrder.includes(dataElement._id));
+ 
+  const [, dropTarget] = useDrop({
+    accept: "item",    
+    drop(dataElement: menuItemProp) {
+        onDropHandler(dataElement);        
+    }        
+  }); 
   
   useEffect(
     () => { 
-      const total = FilteredElementsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)
-      setTotalPrice(total);
-    },
-    [productData, setTotalPrice]
-  );
+      const totalnotBunIngridients = notBunIngridientsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0);
+      const bunIngridient = bunIngridientInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)    
+      setTotalPrice(totalnotBunIngridients + bunIngridient);   
+    }, [setTotalPrice, notBunIngridientsInOrder, bunIngridientInOrder]
+  ); 
 
-  useEffect (
-    () => {      
-      productData.map(dataElement => {
-        const countMinItemInOrder = 1;
-        if (dataElement.__v >= countMinItemInOrder) {
-          setIdInOrder([...idInOrder, dataElement._id])
-        }
-      })
-    }, [productData, setIdInOrder, idInOrder]
-  )
+  const getIdsInOrder = useCallback((productData: menuItemProp[]) => {
+    const newArr: string[] = []
+    productData.map((dataElement: menuItemProp) => {
+      const countMinItemInOrder = 1;      
+      if (dataElement.__v >= countMinItemInOrder) {
+        newArr.push(dataElement._id)           
+      }
+    })    
+    return newArr
+  },[])
+
+  const onClickOrderHandler = useCallback(() => { 
+    const idInOrder: string[] = getIdsInOrder(productData);    
+    dispatch(getOrderNumber(idInOrder));    
+    handleOpenModal(orderNumber);    
+  },[getIdsInOrder, dispatch, handleOpenModal, orderNumber, productData])
+
+
+  const onClickDelete = (dataElement: menuItemProp, key: number) => {
+    dispatch({
+      type: DECREASE_COUNT_ELEMENTS_IN_ORDER,
+      dataElement
+    });    
+    dispatch({
+      type: DELETE_DRAGGED_ELEMENTS,
+      dataElement
+    })    
+  }
+
+  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {     
+    const newSortIndridients = update(notBunIngridientsInOrder, {
+      $splice: [
+        [dragIndex, 1],
+        [hoverIndex, 0, notBunIngridientsInOrder[dragIndex] as menuItemProp],
+      ],
+    });    
+    dispatch({
+      type: SORT_INGRIDIENTS_IN_CONSTRUCTOR,
+      newSortIndridients
+    }) 
+  }, [dispatch, notBunIngridientsInOrder])
+
+  const disabled = (totalPrice === 0 || bunIngridientInOrder.length === 0)
  
-  const onClickHandler = useCallback(  
-    async () => {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "ingredients": idInOrder })
-      };    
-      const url = 'https://norma.nomoreparties.space/api/orders' 
-      try {
-        const res = await fetch(url, requestOptions);
-        if (!res.ok) {
-          throw new Error('Ответ сети был не ok.');
-        }
-        const order = await res.json();
-        handleOpenModal(order.order.number)
-      }
-      catch(err) {
-        console.log(err)        
-      }
-    }, [idInOrder, handleOpenModal]
-  )
-
-  
-  interface CurrentBunElementProps {
-    type: "top" | "bottom" | undefined,
-    typeText: string,
-    dataElement: menuItemProp,
-  }
-
-  const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps): JSX.Element | null => {    
-    if (dataElement.type === 'bun') {
-      return <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>
-          <ConstructorElement
-            type={type}
-            isLocked={true}
-            text={dataElement.name + typeText}
-            price={dataElement.price}
-            thumbnail={dataElement.image}
-          />
-        </li>
-    }
-    return null 
-  }
-
-  interface CurrentnotBunElementProps {
-    dataElement: menuItemProp,    
-  }
-
-  const CurrentNotBunElement = ({dataElement}: CurrentnotBunElementProps): JSX.Element | null => {
-    if (dataElement.type !== 'bun') {
-      return <li className={burgerConstructorStyles.constructorElement}>
-      <DragIcon type="primary" />
-      <ConstructorElement    
-        text={dataElement.name}
-        price={dataElement.price}
-        thumbnail={dataElement.image}
-      />
-    </li>
-    }
-    return null
-  }
-
-  return (
-    <section className={burgerConstructorStyles.section + ' ml-4'}>
+   return (
+    <section className={burgerConstructorStyles.section + ' ml-4'} ref={dropTarget}>
       <ul className={burgerConstructorStyles.elementsList + ' mt-25'}> 
 
-        {FilteredElementsInOrder.map((dataElement, index) => {
-          return <CurrentBunElement type='top' typeText=' верх' key={index} dataElement={dataElement}/>
+        {bunIngridientInOrder.map((dataElement, index) => {
+          return (
+            <CurrentBunElement type='top' typeText=' верх' key={index} dataElement={dataElement}/>
+          ) 
         })}        
 
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {FilteredElementsInOrder.map((dataElement, index) => {            
-            return <CurrentNotBunElement dataElement={dataElement} key={index}/>         
+          {notBunIngridientsInOrder.map((dataElement, index) => {            
+            return (
+              <CurrentNotBunElement 
+                dataElement={dataElement} 
+                key={dataElement.uuid}
+                id={dataElement._id}
+                index={index} 
+                onClickdelete={()=>onClickDelete(dataElement, index)}                      
+                moveCard={moveCard}            
+              />
+            )         
           })}
         </ul>
 
-        {FilteredElementsInOrder.map((dataElement, index) => {
-          return <CurrentBunElement type='bottom' typeText=' низ' key={index} dataElement={dataElement}/>
+        {bunIngridientInOrder.map((dataElement, index) => {
+          return (
+            <CurrentBunElement type='bottom' typeText=' низ' key={index} dataElement={dataElement}/>
+          )
         })} 
       
       </ul>
@@ -128,7 +134,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal}) 
           <p className="text text_type_digits-medium mr-2">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>          
-        <Button type="primary" size="large" onClick={onClickHandler}>Оформить заказ</Button>
+        <Button type="primary" size="large" onClick={onClickOrderHandler} disabled={disabled}>Оформить заказ</Button>
       </div>
 
     </section>      

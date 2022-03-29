@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface menuItemProp {
   _id: string,
   name: string,
@@ -13,6 +11,7 @@ export interface menuItemProp {
   image_mobile: string,
   image_large: string,
   __v: number,
+  uuid?: string
 };
 
 export const itemDefault = {
@@ -28,4 +27,13 @@ export const itemDefault = {
     image_mobile: '',
     image_large: '',
     __v: 0,
+}
+
+export const baseUrl = 'https://norma.nomoreparties.space/api';
+
+export function checkResponse(res: any) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
 }
