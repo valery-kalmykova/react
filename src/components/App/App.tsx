@@ -1,39 +1,32 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router }from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
 import appStyle from './App.module.css';
-import HomePage from '../../pages/home';
-import Login from '../../pages/login';
-import Register from '../../pages/register'
-import ForgotPassword from '../../pages/forgotPassword'
-import ResetPassword from '../../pages/resetPassword'
-import Profile from '../../pages/profile'
-import NotFound from '../../pages/notFound'
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import RouteSwitch from '../RouteSwitch/RouteSwitch'
+import { useDispatch, useSelector } from 'react-redux';
 import { getItems } from '../../services/actions/products';
-import { useDispatch } from 'react-redux';
+import { RootState } from '../../services/reducers';
+import { Loader } from '../../ui/Loader/Loader';
 
-const App = () => { 
+const App = () => {   
   const dispatch = useDispatch();
   useEffect(
     () => {
-      dispatch(getItems());          
+      dispatch(getItems());
     },
     [dispatch]
-  );
-  const keySendSuccess = localStorage.getItem('keySendSuccess')
-
+  ); 
+  const isLoarding =   useSelector((state:RootState) => state.products.itemsRequest);
+  
+  if (isLoarding) {
+    return (<Loader size="large" inverse={true}/>)
+  }
+  
   return (
-    <Router forceRefresh={true}>
+    <Router>
       <div className={appStyle.app}>
         <AppHeader />
-        <Route exact path='/' component={HomePage}/>
-        <Route exact path='/login' component={Login}/>
-        <Route exact path='/register' component={Register}/>
-        <Route exact path='/forgot-password' component={ForgotPassword}/>
-        <Route exact path='/reset-password' component={keySendSuccess ? ResetPassword : ForgotPassword }/>
-        <Route exact path='/404' component={NotFound}/>        
-        <ProtectedRoute exact path='/profile' component={Profile}/>        
+        <RouteSwitch/>
       </div>
     </Router>
     

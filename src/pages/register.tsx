@@ -2,9 +2,9 @@ import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../services/actions/user';
-import styles from './login.module.css';
+import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { mailformat } from '../utils/constants';
+import { mailformat  } from '../utils/constants';
 
 const Register = () => { 
   const dispatch = useDispatch(); 
@@ -36,7 +36,9 @@ const Register = () => {
     [history]
   );
 
-  const submitHandler = async () => {  
+  const submitHandler = async (e) => { 
+    e.preventDefault();
+    if (disabledSubmit) return 
     await dispatch(registerUser(userData));
     history.replace({ pathname: '/' });
   };
@@ -44,7 +46,7 @@ const Register = () => {
   return (
     <div className={styles.main}>
       <h2 className='text text_type_main-medium mb-6'>Регистрация</h2>
-      <form className={styles.items}>
+      <form className={styles.items} onSubmit={submitHandler}>
         <div className={styles.item + ' mb-6'}>          
           <Input 
             value={userData.name}              
@@ -94,6 +96,7 @@ const Register = () => {
             ref={passwordRef}
           />
         </div>
+        <input type="submit" style={{display: 'none'}} />
       </form>
       <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Зарегистрироваться</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>

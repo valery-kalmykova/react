@@ -52,7 +52,7 @@ export function loginUser(userData: userData) {
       return fetch(baseUrl + '/auth/login', requestOptions)
         .then(checkResponse) 
         .then(res => {
-          dispatch(loginUserSuccess(res));
+          dispatch(loginUserSuccess(res));          
           localStorage.setItem('accessToken', res.accessToken.split('Bearer ')[1])
           localStorage.setItem('refreshToken', res.refreshToken);                    
           return res;        
@@ -171,7 +171,7 @@ export function changeUser(userData: userData) {
       },
       body: JSON.stringify({
         "email": userData.email, 
-        "password": userData.password,
+        "password": userData.password === 'Новый пароль' ? null : userData.password,
         "name": userData.name 
       }) 
     };

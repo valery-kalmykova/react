@@ -1,20 +1,19 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './login.module.css';
+import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { changeUser, logoutUser } from '../services/actions/user';
 import { RootState } from '../services/reducers';
-import { mailformat } from '../utils/constants';
+import { mailformat  } from '../utils/constants';
 
 const Profile = () => {
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const history = useHistory();
   const name = useSelector((state:RootState) => state.user.user.name);
-  const email = useSelector((state:RootState) => state.user.user.email);
-    
+  const email = useSelector((state:RootState) => state.user.user.email);    
   const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);  
+  const passwordRef = useRef<HTMLInputElement>(null);
   const [newUserData, setNewUserData] = useState({
     name: name,
     email: email,
@@ -23,8 +22,13 @@ const Profile = () => {
   const [disabled, setDisabled] = useState({
     name: false,
     email: false,
-    password: false
+    password: false    
   });
+  const [isChanged, setIsChanged] = useState({
+    name: false,
+    email: false,
+    password: false
+  })
   const [hasError, setHasError] = useState({
     name: false,
     email: false,
@@ -37,11 +41,22 @@ const Profile = () => {
     hasError.password ||
     hasError.name
   )
+  const activeButtons = (
+    isChanged.name || isChanged.email || isChanged.password
+  )
   
-  const submitHandler = async () => {
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (disabledSubmit) return
     await dispatch(changeUser(newUserData));
     setDisabled({
       ...disabled,
+      name: false,
+      email: false,
+      password: false
+    });
+    setIsChanged ({
+      ...isChanged,
       name: false,
       email: false,
       password: false
@@ -67,9 +82,15 @@ const Profile = () => {
           name: false,
           email: false,
           password: false
+        });
+        setIsChanged ({
+          ...isChanged,
+          name: false,
+          email: false,
+          password: false
         })
     },
-    [newUserData, disabled, name, email, hasError]
+    [newUserData, disabled, name, email, hasError, isChanged]
   );
 
   const logout = async () => {  
@@ -77,7 +98,6 @@ const Profile = () => {
     history.replace({ pathname: '/login' });
   };
 
-    
   return (
     <div className={styles.profileMain}>
       <div className={styles.sideBlock + ' mr-15 pl-5'}>
@@ -104,11 +124,14 @@ const Profile = () => {
         </p>
       </div>
       <div>
-        <form className={styles.items}>
+        <form className={styles.items} onSubmit={submitHandler}>
           <div className={styles.item + ' mb-6'}>
             <Input 
               value={newUserData.name}              
-              onChange={e =>setNewUserData({...newUserData, name: e.target.value})}
+              onChange={e =>{
+                setNewUserData({...newUserData, name: e.target.value});
+                setIsChanged({...isChanged, name: true});
+              }}
               name={'name'}   
               type={'text'}              
               placeholder={'Имя'}
@@ -124,6 +147,7 @@ const Profile = () => {
               value={newUserData.email} 
               onChange={e => {
                 setNewUserData({...newUserData, email: e.target.value});
+                setIsChanged({...isChanged, email: true});
                 if (emailRef.current && !emailRef.current.value.match(mailformat)) {
                   setHasError({...hasError, email: true})
                 } else {
@@ -146,6 +170,7 @@ const Profile = () => {
               value={newUserData.password} 
               onChange={e => {
                 setNewUserData({...newUserData, password: e.target.value});
+                setIsChanged({...isChanged, password: true});
                 if (passwordRef.current && passwordRef.current.value.length < 5) {
                   setHasError({...hasError, password: true})                
                 } else {
@@ -163,11 +188,12 @@ const Profile = () => {
               ref={passwordRef}
             />
           </div>
+          <input type="submit" style={{display: 'none'}} />
         </form>
-        <div className={styles.buttons + ' mt-10'}>
+        {activeButtons && <div className={styles.buttons + ' mt-10'}>
           <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Сохранить</Button>
           <Button type="primary" size="medium" onClick={cancelHandler}>Отмена</Button>
-        </div>
+        </div>}
       </div>
     </div>
   )

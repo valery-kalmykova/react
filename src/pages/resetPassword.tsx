@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import styles from './login.module.css';
+import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { resetPassword } from '../services/actions/password';
 
@@ -29,7 +29,9 @@ const ResetPassword = () => {
     [history]
   );
   
-  const submitHandler = async () => {  
+  const submitHandler = async (e) => { 
+    e.preventDefault();
+    if (disabledSubmit) return  
     await dispatch(resetPassword({password, secretKey}));
     history.replace({ pathname: '/login' });
   };  
@@ -37,7 +39,7 @@ const ResetPassword = () => {
   return (
     <div className={styles.main}>
       <h2 className='text text_type_main-medium mb-6'>Восстановление пароля</h2>
-      <form className={styles.items}>      
+      <form className={styles.items} onSubmit={submitHandler}>      
         <div className={styles.item + ' mb-6'}>
           <Input 
             value={password} 
@@ -67,7 +69,8 @@ const ResetPassword = () => {
             type={'text'}
             placeholder={'Введите код из письма'}               
           />
-        </div>   
+        </div>
+        <input type="submit" style={{display: 'none'}} />   
       </form>
       <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Сохранить</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>

@@ -2,9 +2,9 @@ import React, { useState, useCallback, useRef } from 'react';
 import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/actions/user';
-import styles from './login.module.css';
+import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { mailformat } from '../utils/constants';
+import { mailformat  } from '../utils/constants';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -21,13 +21,15 @@ const Login = () => {
   const [passwordShow, setPasswordShow] = useState(false);   
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const disabled = userData.email === '' || userData.password === '' || hasError.email || hasError.password
+  const disabledSubmit = userData.email === '' || userData.password === '' || hasError.email || hasError.password
   
   const onIconClick = () => {
     setPasswordShow(!passwordShow)
   }
 
-  const submitHandler = async () => {     
+  const submitHandler = async (e) => { 
+    e.preventDefault();
+    if (disabledSubmit) return
     await dispatch(loginUser(userData)); 
     history.replace({ pathname: state?.from || '/' });
   };
@@ -57,7 +59,7 @@ const Login = () => {
   return (
     <div className={styles.main}>
       <h2 className='text text_type_main-medium mb-6'>Вход</h2>
-      <form className={styles.items}>
+      <form className={styles.items} onSubmit={submitHandler}>
         <div className={styles.item + ' mb-6'}>
           <Input 
             value={userData.email} 
@@ -98,8 +100,9 @@ const Login = () => {
             ref={passwordRef}                            
           />
         </div>
+        <input type="submit" style={{display: 'none'}} />
       </form>
-      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabled}>Войти</Button>
+      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Войти</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Вы - новый пользователь?          
           <Button type="secondary" size="medium" onClick={register}>Зарегистрироваться</Button>          

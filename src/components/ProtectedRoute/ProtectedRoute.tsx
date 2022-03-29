@@ -5,7 +5,7 @@ import { getUser } from '../../services/actions/user'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers';
 
-export default function ProtectedRoute({ component: Component, ...restOfProps }) { 
+export default function ProtectedRoute({ children, ...restOfProps }) { 
   const token = localStorage.getItem('accessToken');
   const dispatch = useDispatch();  
   
@@ -26,7 +26,7 @@ export default function ProtectedRoute({ component: Component, ...restOfProps })
     <Route
       {...restOfProps}
       render={(props) =>    
-        token ? <Component {...props} /> : <Redirect to={{pathname: '/login', state: props.location}} />
+        token ? (children) : <Redirect to={{pathname: '/login', state: props.location}} />
       }
     />
   );

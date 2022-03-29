@@ -1,24 +1,36 @@
-import React, {useState, useEffect, useRef, RefObject} from 'react';
+import React, {useState, useEffect, useRef, RefObject, useCallback} from 'react';
+import { useHistory, useLocation }from 'react-router-dom';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { menuItemProp } from '../../utils/constants'
 import { useDrag } from "react-dnd";
 import { useOnScreen } from './useOnScreen';
 import { RootState } from '../../services/reducers';
 
 interface CardProps {
-  dataElement: menuItemProp,
-  onClick: () => void,  
+  dataElement: menuItemProp  
 }
 
-const Card: React.FC<CardProps> = ({dataElement, onClick}) => {  
+const Card: React.FC<CardProps> = ({dataElement}) => {  
   const [, dragRef] = useDrag({
     type: 'item',  
     item: dataElement,
   });
 
   const elInCostructor = (dataElement.__v > 0)
+  const history = useHistory();
+  const location = useLocation();
+  
+  const onClick = useCallback(
+    () => {
+        history.replace({ 
+          pathname: `/ingredients/${dataElement._id}`, 
+          state: { background: location } 
+        });        
+    },
+    [history, dataElement._id, location]
+  );
   
   return (
     <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick} ref={dragRef}>
@@ -34,21 +46,19 @@ const Card: React.FC<CardProps> = ({dataElement, onClick}) => {
 }
 
 interface TypeCardsProps {
-  type: string,
-  handleOpenModal: (dataElement: menuItemProp) => void,
+  type: string,  
   productData: menuItemProp[],
 }
 
 
-const TypeCards: React.FC<TypeCardsProps> = ({type, handleOpenModal, productData}) => {
+const TypeCards: React.FC<TypeCardsProps> = ({type, productData}) => {
   return (
     <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
       {productData.map((dataElement) => {
         if (dataElement.type === type) {
           return <Card 
           dataElement={dataElement} 
-          key={dataElement._id} 
-          onClick={()=>handleOpenModal(dataElement)}
+          key={dataElement._id}          
           />
         }      
       })}
@@ -56,12 +66,8 @@ const TypeCards: React.FC<TypeCardsProps> = ({type, handleOpenModal, productData
   ) 
 }
 
-interface BurgerIngredientsProps {
-  handleOpenModal: (dataElement: menuItemProp) => void,  
-}
 
-const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({handleOpenModal}) => {
-  const dispatch = useDispatch();
+const BurgerIngredients: React.FC = () => {  
   const productData = useSelector((state:RootState) => state.products.productData);
   
   const main = useRef(null) as RefObject<HTMLHeadingElement>;
@@ -107,11 +113,11 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({handleOpenModal}) 
 
      <div className={burgerIngredientsStyles.scrollSection} id="scrollArea">
        <h2 className='text text_type_main-medium mb-6' ref={bun}>Булки</h2>
-        <TypeCards type='bun' handleOpenModal={handleOpenModal} productData={productData}/>        
+        <TypeCards type='bun' productData={productData}/>        
        <h2 className='text text_type_main-medium mb-6 mt-10' ref={sauce}>Соусы</h2>
-        <TypeCards type='sauce' handleOpenModal={handleOpenModal} productData={productData}/>
+        <TypeCards type='sauce' productData={productData}/>
        <h2 className='text text_type_main-medium mb-6 mt-10' ref={main}>Начинки</h2>
-        <TypeCards type='main' handleOpenModal={handleOpenModal} productData={productData}/>
+        <TypeCards type='main' productData={productData}/>
       </div>
       
     </section>

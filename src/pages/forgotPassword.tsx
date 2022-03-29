@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './login.module.css';
+import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { forgotPassword } from '../services/actions/password';
 import { mailformat } from '../utils/constants';
@@ -23,7 +23,9 @@ const ForgotPassword = () => {
     [history]
   );
 
-  const submitHandler = async () => {  
+  const submitHandler = async (e) => {  
+    e.preventDefault();
+    if (disabledSubmit) return
     await dispatch(forgotPassword(email));
     if (keySendSuccess) {      
       history.replace({ pathname: '/reset-password' });
@@ -33,7 +35,7 @@ const ForgotPassword = () => {
   return (
     <div className={styles.main}>
       <h2 className='text text_type_main-medium mb-6'>Восстановление пароля</h2>
-      <form className={styles.items}>      
+      <form className={styles.items} onSubmit={submitHandler}>      
         <div className={styles.item + ' mb-6'}>
           <Input 
             value={email} 
@@ -52,7 +54,8 @@ const ForgotPassword = () => {
             errorText={'Введите корректный e-mail'} 
             ref={emailRef}                             
           />
-        </div>        
+        </div> 
+        <input type="submit" style={{display: 'none'}} />       
       </form>
       <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Восстановить</Button>
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
