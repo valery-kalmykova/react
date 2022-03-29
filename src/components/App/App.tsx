@@ -1,64 +1,89 @@
-import React, {useEffect, useState} from 'react';
-import AppHeader from '../AppHeader/AppHeader'
-import BurgerConstructor from '../BurgerConstructor/BurgerConstructor'
-import BurgerIngredients from '../BurgerIngredients/BurgerIngredients'
-import Modal from '../Modal/Modal'
-import OrderDetails from '../OrderDetails/OrderDetails'
-import IngredientDetails from '../IngredientDetails/IngredientDetails'
+import React from 'react';
+import AppHeader from '../AppHeader/AppHeader';
+import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
+import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
+import Modal from '../Modal/Modal';
+import OrderDetails from '../OrderDetails/OrderDetails';
+import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import appStyle from './App.module.css';
+import { menuItemProp } from '../../utils/constants'
+import { useDispatch, useSelector } from 'react-redux';
+import { handleOpenIngredientDetail, handleCloseIngredientDetail } from '../../services/actions/ingredientDetail';
+import { handleOpenOrder, handleCloseOrder } from '../../services/actions/order';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { ADD_DRAGGED_ELEMENTS, INCREASE_COUNT_ELEMENTS_IN_ORDER, DELETE_PREV_BUN_ELEMENT, setKeyValue} from '../../services/actions/products';
+import { Loader } from '../../ui/Loader/Loader'
 
-const url = 'https://norma.nomoreparties.space/api/ingredients';
 
-const App =  React.memo(() => {
-  const [state, setState] = useState({ 
-    productData: []       
-  })
-  const [isVisibleIngDet, setIsVisibleIngDet] = useState(false);
-  const [itemIngDet, setitemIngDet] = useState(null);
-  const [isVisibleOrder, setIsVisibleOrder] = useState(false)
+const App = () => { 
+  const dispatch = useDispatch();
 
-   useEffect(() => {
-    const getProductData = async () => {
-      setState({...state});
-      try {
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error('Ответ сети был не ok.');
-        }
-        const data = await res.json();
-        setState({ productData: data.data });        
-      } catch(err) {
-        console.log(err)
-      }           
+  interface RootState {
+    ingredientDetail:{ 
+      item: menuItemProp,
+      isVisibleModal: boolean,
+    },
+    order: {
+      orderNumber: number,
+      isVisibleModalOrder: boolean,
+      orderRequest: boolean
     }
-     getProductData();     
-  }, [])
-
-  const openIngDet = (item) => {
-    setIsVisibleIngDet(true)
-    setitemIngDet(item)
-  }  
-  const closeIngDet = () => {
-    setIsVisibleIngDet(!isVisibleIngDet)
-    setitemIngDet(null)
   }
-  const toggleOrder = () => setIsVisibleOrder(!isVisibleOrder)
+  const itemIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.item);
+  const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
+
+  const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
+ 
+
+  const openIngredientDetail = (item: menuItemProp) => {    
+    dispatch(handleOpenIngredientDetail(item))
+  }  
+  const closeIngredientDetail = () => {    
+    dispatch(handleCloseIngredientDetail())
+  }
+  
+  const openOrder = (orderNumber: number) => {
+    dispatch(handleOpenOrder(orderNumber))
+  }
+  const closeOrder = () => {
+    dispatch(handleCloseOrder())
+  }
+
+  const handleDrop = (dataElement: menuItemProp) => {
+    if (dataElement.type === 'bun') {
+      dispatch({
+        type: DELETE_PREV_BUN_ELEMENT
+      })
+    }; 
+    dispatch(setKeyValue(dataElement));
+    dispatch({
+      type: ADD_DRAGGED_ELEMENTS,
+      dataElement
+    });    
+    dispatch({
+      type: INCREASE_COUNT_ELEMENTS_IN_ORDER,
+      dataElement
+    });     
+  };
 
   return (
     <div className={appStyle.app}>
-      <AppHeader />
-      <div className={appStyle.main}>
-        <BurgerIngredients data={state.productData} handleOpenModal={openIngDet}/>
-        <BurgerConstructor data={state.productData} handleOpenModal={toggleOrder}/>        
-      </div>    
-      {isVisibleIngDet && <Modal title='Детали ингредиента' handleClose={closeIngDet}>        
-        <IngredientDetails item={itemIngDet}/>
-      </Modal>}
-      {isVisibleOrder && <Modal title='' handleClose={toggleOrder}>        
-        <OrderDetails />        
-      </Modal>}
+      <AppHeader /> 
+        <DndProvider backend={HTML5Backend}>             
+        <div className={appStyle.main}>
+          <BurgerIngredients handleOpenModal={openIngredientDetail}/>
+          <BurgerConstructor handleOpenModal={openOrder} onDropHandler={handleDrop}/>        
+        </div>
+        </DndProvider>
+        {isVisibleModalIngredientDetail && <Modal title='Детали ингредиента' handleClose={closeIngredientDetail}>        
+          <IngredientDetails item={itemIngredientDetail}/>
+        </Modal>}
+        {isVisibleModalOrder && <Modal title='' handleClose={closeOrder}>
+          {orderRequest ? <Loader size="large" inverse={true}/> : <OrderDetails orderNumber={orderNumber}/>}        
+        </Modal>}   
     </div>
   );
-})
+}
 
 export default App;

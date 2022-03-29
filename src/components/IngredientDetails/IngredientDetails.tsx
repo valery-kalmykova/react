@@ -1,9 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ingredientDetailsStyle from './IngredientDetails.module.css';
-import {menuItemPropTypes} from '../../utils/constants'
+import {menuItemProp} from '../../utils/constants'
 
-const IngredientDetails = ({item}) => {
+interface IngredientDetailsProps {
+  item: menuItemProp
+}
+
+const IngredientDetails: React.FC<IngredientDetailsProps> = ({item}) => {
   
   return (
     <div className={ingredientDetailsStyle.content}>      
@@ -29,10 +32,6 @@ const IngredientDetails = ({item}) => {
       </ul>
     </div>
   )
-}
-
-IngredientDetails.propTypes = {
-  item: menuItemPropTypes
 }
 
 export default IngredientDetails;

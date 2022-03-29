@@ -1,13 +1,28 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useState, useEffect, useRef, RefObject} from 'react';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
-import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
-import {menuItemPropTypes} from '../../utils/constants'
+import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components'
+import { useDispatch, useSelector } from 'react-redux';
+import { getItems } from '../../services/actions/products'
+import { menuItemProp } from '../../utils/constants'
+import { useDrag } from "react-dnd";
+import { useOnScreen } from './useOnScreen'
 
-const Card = ({dataElement, onClick}) => {
+interface CardProps {
+  dataElement: menuItemProp,
+  onClick: () => void,  
+}
+
+const Card: React.FC<CardProps> = ({dataElement, onClick}) => {  
+  const [, dragRef] = useDrag({
+    type: 'item',  
+    item: dataElement,
+  });
+
+  const elInCostructor = (dataElement.__v > 0)
   
-  return <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick}>
-        {/* <Counter count={1} size="default"/> */}
+  return (
+    <div className={burgerIngredientsStyles.card + ' mb-8'} onClick={onClick} ref={dragRef}>
+        {elInCostructor && <Counter count={dataElement.__v} size="default" />}
         <img className={burgerIngredientsStyles.cardImage + ' mr-4 ml-4'} src={dataElement.image} alt={dataElement.name} />
         <div className={burgerIngredientsStyles.currency + ' mt-1 mb-1'}>
           <p className="text text_type_digits-default pr-2">{dataElement.price}</p>
@@ -15,59 +30,104 @@ const Card = ({dataElement, onClick}) => {
         </div>
         <p className={burgerIngredientsStyles.cardTitle + " text text_type_main-default"}>{dataElement.name}</p>
       </div>
+  ) 
 }
 
-Card.propTypes = {
-  onClick: PropTypes.func.isRequired
+interface TypeCardsProps {
+  type: string,
+  handleOpenModal: (dataElement: menuItemProp) => void,
+  productData: menuItemProp[],
 }
 
-const TypeCards = ({data, type, handleOpenModal}) => {  
-  return <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
-    {data.map(dataElement => {
-      if (dataElement.type === type) {
-        return <Card dataElement={dataElement} key={dataElement._id} onClick={()=>handleOpenModal(dataElement)}/>
-      }      
-    })}
-  </div>
+interface RootState {
+  products:{ 
+    productData: menuItemProp[],    
+  }
 }
 
-const TabSet = () => {
-  const [current, setCurrent] = useState('Булки')
+const TypeCards: React.FC<TypeCardsProps> = ({type, handleOpenModal, productData}) => {
   return (
-    <div style={{ display: 'flex' }} className='mb-10'>
-      <Tab value="Булки" active={current === 'Булки'} onClick={setCurrent}>
-        Булки
-      </Tab>
-      <Tab value="Соусы" active={current === 'Соусы'} onClick={setCurrent}>
-        Соусы
-      </Tab>
-      <Tab value="Начинки" active={current === 'Начинки'} onClick={setCurrent}>
-        Начинки
-      </Tab>
+    <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
+      {productData.map((dataElement) => {
+        if (dataElement.type === type) {
+          return <Card 
+          dataElement={dataElement} 
+          key={dataElement._id} 
+          onClick={()=>handleOpenModal(dataElement)}
+          />
+        }      
+      })}
     </div>
-  )
+  ) 
 }
 
-const BurgerIngredients = ({data, handleOpenModal}) => {  
+interface BurgerIngredientsProps {
+  handleOpenModal: (dataElement: menuItemProp) => void,  
+}
+
+const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({handleOpenModal}) => {
+  const dispatch = useDispatch();
+  const productData = useSelector((state:RootState) => state.products.productData);
+  
+  const main = useRef(null) as RefObject<HTMLHeadingElement>;
+  const sauce = useRef(null) as RefObject<HTMLHeadingElement>;
+  const bun = useRef(null) as RefObject<HTMLHeadingElement>;
+  
+  const [currentTab, setCurrent] = useState('');  
+  const onScreenMain = useOnScreen(main);
+  const onScreensauce = useOnScreen(sauce);
+  const onScreenbun = useOnScreen(bun);
+
+  useEffect(
+    () => {
+      dispatch(getItems());      
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+		if (onScreenMain) {
+			setCurrent('main');
+    }
+    else if (onScreensauce) {
+			setCurrent('sauce');
+		}
+    else if (onScreenbun) {
+			setCurrent('bun');
+		}
+	}, [onScreenbun, onScreensauce, onScreenMain, setCurrent]);
+
+  const scrollTo = (ref: RefObject<HTMLHeadingElement>) => {
+    ref.current && ref.current.scrollIntoView()
+  }
+
   return (
     <section className={burgerIngredientsStyles.section + ' mr-10'}>
       <h1 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h1>
-     <TabSet/>
-     <div className={burgerIngredientsStyles.scrollSection}>
-        <h2 className='text text_type_main-medium mb-6'>Булки</h2>
-        <TypeCards data={data} type='bun' handleOpenModal={handleOpenModal}/>        
-       <h2 className='text text_type_main-medium mb-6 mt-10'>Соусы</h2>
-        <TypeCards data={data} type='main' handleOpenModal={handleOpenModal}/>
-       <h2 className='text text_type_main-medium mb-6 mt-10'>Начинки</h2>
-        <TypeCards data={data} type='sauce' handleOpenModal={handleOpenModal}/>
+     
+      <div style={{ display: 'flex' }} className='mb-10'>
+        <Tab value="Булки" active={currentTab === 'bun'} onClick={() => scrollTo(bun)}>
+          Булки
+        </Tab>
+        <Tab value="Соусы" active={currentTab === 'sauce'} onClick={() => scrollTo(sauce)}>
+          Соусы
+        </Tab>
+        <Tab value="Начинки" active={currentTab === 'main'} onClick={() => scrollTo(main)}>
+          Начинки
+        </Tab>
+      </div>
+
+     <div className={burgerIngredientsStyles.scrollSection} id="scrollArea">
+       <h2 className='text text_type_main-medium mb-6' ref={bun}>Булки</h2>
+        <TypeCards type='bun' handleOpenModal={handleOpenModal} productData={productData}/>        
+       <h2 className='text text_type_main-medium mb-6 mt-10' ref={sauce}>Соусы</h2>
+        <TypeCards type='sauce' handleOpenModal={handleOpenModal} productData={productData}/>
+       <h2 className='text text_type_main-medium mb-6 mt-10' ref={main}>Начинки</h2>
+        <TypeCards type='main' handleOpenModal={handleOpenModal} productData={productData}/>
       </div>
       
     </section>
   );  
-}
-
-BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(menuItemPropTypes.isRequired)
 }
 
 export default BurgerIngredients;
