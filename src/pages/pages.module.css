@@ -6,6 +6,11 @@
   height: calc(100vh - 88px);
 }
 
+.mainHome {
+  display: flex;
+  justify-content: center;
+}
+
 .profileMain {
   display: flex;
   flex-direction: row;

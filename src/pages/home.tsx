@@ -1,13 +1,11 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import BurgerConstructor from '../components/BurgerConstructor/BurgerConstructor';
 import BurgerIngredients from '../components/BurgerIngredients/BurgerIngredients';
 import Modal from '../components/Modal/Modal';
 import OrderDetails from '../components/OrderDetails/OrderDetails';
-import IngredientDetails from '../components/IngredientDetails/IngredientDetails';
-import homeStyle from './home.module.css';
+import styles from './pages.module.css';
 import { menuItemProp } from '../utils/constants'
 import { useDispatch, useSelector } from 'react-redux';
-import { handleOpenIngredientDetail, handleCloseIngredientDetail } from '../services/actions/ingredientDetail';
 import { handleOpenOrder, handleCloseOrder } from '../services/actions/order';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -18,17 +16,7 @@ import { RootState } from '../services/reducers';
 const HomePage = () => { 
   const dispatch = useDispatch();
 
-  // const itemIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.item);
-  // const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
-
   const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
-
-  // const openIngredientDetail = (item: menuItemProp) => {    
-  //   dispatch(handleOpenIngredientDetail(item))
-  // }  
-  // const closeIngredientDetail = () => {    
-  //   dispatch(handleCloseIngredientDetail())
-  // }
   
   const openOrder = (orderNumber: number) => {
     dispatch(handleOpenOrder(orderNumber))
@@ -57,14 +45,11 @@ const HomePage = () => {
   return (
     <>     
       <DndProvider backend={HTML5Backend}>             
-      <div className={homeStyle.main}>
+      <div className={styles.mainHome}>
         <BurgerIngredients />
         <BurgerConstructor handleOpenModal={openOrder} onDropHandler={handleDrop}/>        
       </div>
-      </DndProvider>
-      {/* {isVisibleModalIngredientDetail && <Modal title='Детали ингредиента' handleClose={closeIngredientDetail}>        
-        <IngredientDetails item={itemIngredientDetail}/>
-      </Modal>} */}
+      </DndProvider>      
       {isVisibleModalOrder && <Modal title='' handleClose={closeOrder}>
         {orderRequest ? <Loader size="large" inverse={true}/> : <OrderDetails orderNumber={orderNumber}/>}        
       </Modal>}   
