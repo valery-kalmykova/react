@@ -13,13 +13,19 @@ import {
   CHANGE_USER_FAILED,
   LOGOUT_USER_REQUEST,
   LOGOUT_USER_SUCCESS,
-  LOGOUT_USER_FAILED,     
+  LOGOUT_USER_FAILED,   
+  IS_LOGGED_IN,
+  IS_NOT_LOGGED_IN,
+  REFRESH_TOKEN_REQUEST,
+  REFRESH_TOKEN_SUCCESS,
+  REFRESH_TOKEN_FAILED, 
 } from '../actions/user';
 import { AnyAction } from 'redux';
 import { userData, userDefault } from '../../utils/constants';
 
 interface iinitialState { 
   user: userData,
+  getUserSuccess: boolean,
   loginRequest: boolean,
   loginFailed: boolean,
   registerRequest: boolean,
@@ -30,10 +36,16 @@ interface iinitialState {
   changeFailed: boolean,
   logoutRequest: boolean,
   logoutFailed: boolean,
+  logoutSuccess: boolean,
+  isLoggedIn: boolean,
+  refreshRequest: boolean,
+  refreshFailed: boolean,
+  refreshSuccess: boolean,
 }
 
 const initialState:iinitialState = {
   user: userDefault,
+  getUserSuccess: false,
   loginRequest: false,
   loginFailed: false,
   registerRequest: false,
@@ -44,6 +56,11 @@ const initialState:iinitialState = {
   changeFailed: false,
   logoutRequest: false,
   logoutFailed: false,
+  logoutSuccess: false,
+  isLoggedIn: false,
+  refreshRequest: false,
+  refreshFailed: false,
+  refreshSuccess: false,
 }
 
 export const userReducer = (state = initialState, action: AnyAction) => {
@@ -108,6 +125,7 @@ export const userReducer = (state = initialState, action: AnyAction) => {
         ...state,
         getFailed: false,
         user: action.payload.data.user,
+        getUserSuccess: action.payload.data.success,
         getRequest: false,
       }      
     }
@@ -156,6 +174,7 @@ export const userReducer = (state = initialState, action: AnyAction) => {
         logoutFailed: false,
         user: userDefault,
         logoutRequest: false,
+        logoutSuccess: true,
       }      
     }
     case LOGOUT_USER_FAILED: {
@@ -163,6 +182,43 @@ export const userReducer = (state = initialState, action: AnyAction) => {
         ...state,
         logoutFailed: true, 
         logoutRequest: false        
+      }
+    }
+
+    case IS_LOGGED_IN: {
+      return {
+        ...state,
+        isLoggedIn: true              
+      }
+    }
+
+    case IS_NOT_LOGGED_IN: {
+      return {
+        ...state,
+        isLoggedIn: false              
+      }
+    }
+
+    case REFRESH_TOKEN_REQUEST: {
+      return {
+        ...state,
+        refreshRequest: true,
+        refreshFailed: false
+      }
+    }
+    case REFRESH_TOKEN_SUCCESS: {
+      return {
+        ...state,
+        refreshFailed: false,        
+        refreshRequest: false,
+        refreshSuccess: action.payload.success,
+      }      
+    }
+    case REFRESH_TOKEN_FAILED: {
+      return {
+        ...state,
+        refreshFailed: true, 
+        refreshRequest: false        
       }
     }
 

@@ -9,14 +9,15 @@ import { RootState } from '../../services/reducers';
 import { Loader } from '../../ui/Loader/Loader';
 
 const App = () => {   
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
   useEffect(
     () => {
       dispatch(getItems());
     },
     [dispatch]
   ); 
-  const isLoarding =   useSelector((state:RootState) => state.products.itemsRequest);
+  
+  const isLoarding = useSelector((state:RootState) => state.products.itemsRequest);  
   
   if (isLoarding) {
     return (<Loader size="large" inverse={true}/>)

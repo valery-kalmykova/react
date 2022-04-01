@@ -70,9 +70,8 @@ const ResetPassword = () => {
             placeholder={'Введите код из письма'}               
           />
         </div>
-        <input type="submit" style={{display: 'none'}} />   
-      </form>
-      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Сохранить</Button>
+        <Button type="primary" size="medium" disabled={disabledSubmit}>Сохранить</Button>   
+      </form>      
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Вспомнили пароль?          
           <Button type="secondary" size="medium" onClick={login}>Войти</Button>          

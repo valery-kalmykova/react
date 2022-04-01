@@ -96,9 +96,8 @@ const Register = () => {
             ref={passwordRef}
           />
         </div>
-        <input type="submit" style={{display: 'none'}} />
-      </form>
-      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Зарегистрироваться</Button>
+        <Button type="primary" size="medium" disabled={disabledSubmit}>Зарегистрироваться</Button>
+      </form>      
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Уже зарегистрированы?          
         <Button type="secondary" size="medium" onClick={login}>Войти</Button>          

@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useHistory, Redirect, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../services/actions/user';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { mailformat  } from '../utils/constants';
+import { RootState } from '../services/reducers';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -49,8 +50,8 @@ const Login = () => {
     [history]
   );
   
-  const isUserLoaded = localStorage.getItem('accessToken');
-  if(isUserLoaded) {
+  const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn);
+  if(isLoggedIn) {
     return(
       <Redirect to={ state?.from || '/' }/>
     )
@@ -100,9 +101,8 @@ const Login = () => {
             ref={passwordRef}                            
           />
         </div>
-        <input type="submit" style={{display: 'none'}} />
-      </form>
-      <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Войти</Button>
+        <Button type="primary" size="medium" disabled={disabledSubmit}>Войти</Button>        
+      </form>      
       <p className={styles.bottomText + ' text text_type_main-default text_color_inactive mt-20'}>
         Вы - новый пользователь?          
           <Button type="secondary" size="medium" onClick={register}>Зарегистрироваться</Button>          

@@ -1,7 +1,7 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import { rootReducer } from './index';
 import thunk from 'redux-thunk';
-import { useDispatch } from 'react-redux';
+
 
 declare global {
   interface Window {

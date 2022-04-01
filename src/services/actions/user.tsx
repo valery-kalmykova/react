@@ -1,7 +1,9 @@
 import { baseUrl, checkResponse } from '../../utils/constants';
-import { fetchWithAuth } from '../../utils/token';
 import { AppDispatch } from '../reducers/store';
 import { userData } from '../../utils/constants';
+
+export const IS_LOGGED_IN = 'IS_LOGGED_IN';
+export const IS_NOT_LOGGED_IN = 'IS_NOT_LOGGED_IN';
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
@@ -22,6 +24,18 @@ export const CHANGE_USER_FAILED = 'CHANGE_USER_FAILED';
 export const LOGOUT_USER_REQUEST = 'LOGOUT_USER_REQUEST';
 export const LOGOUT_USER_SUCCESS = 'LOGOUT_USER_REQUEST';
 export const LOGOUT_USER_FAILED = 'LOGOUT_USER_REQUEST';
+
+export const REFRESH_TOKEN_REQUEST = 'REFRESH_TOKEN_REQUEST';
+export const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS';
+export const REFRESH_TOKEN_FAILED = 'REFRESH_TOKEN_FAILED';
+
+export const setIsLoggedIn = () => ({
+  type: IS_LOGGED_IN
+})
+
+export const setIsNotLoggedIn = () => ({
+  type: IS_NOT_LOGGED_IN
+})
 
 export const loginUserRequest = () => ({
   type: LOGIN_USER_REQUEST
@@ -52,9 +66,10 @@ export function loginUser(userData: userData) {
       return fetch(baseUrl + '/auth/login', requestOptions)
         .then(checkResponse) 
         .then(res => {
-          dispatch(loginUserSuccess(res));          
+          dispatch(loginUserSuccess(res));
+          dispatch(setIsLoggedIn()); 
           localStorage.setItem('accessToken', res.accessToken.split('Bearer ')[1])
-          localStorage.setItem('refreshToken', res.refreshToken);                    
+          localStorage.setItem('refreshToken', res.refreshToken); 
           return res;        
         })        
       }    
@@ -96,8 +111,9 @@ export function registerUser(userData: userData) {
         .then(checkResponse) 
         .then(res => {
           dispatch(registerUserSuccess(res));
-          localStorage.setItem('accessToken', res.accessToken.split('Bearer ')[1])
-          localStorage.setItem('refreshToken', res.refreshToken)
+          dispatch(setIsLoggedIn());
+          localStorage.setItem('accessToken', res.accessToken.split('Bearer ')[1]);
+          localStorage.setItem('refreshToken', res.refreshToken);          
           return res;        
         })        
       }    
@@ -123,20 +139,21 @@ export const getUserFailed = (error: string) => ({
 });
 
 export function getUser() {
-  return async (dispatch: AppDispatch) => {    
+  return async (dispatch: AppDispatch) => {
+    const accessToken = localStorage.getItem('accessToken');
     const requestOptions = {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': ''
+        'Authorization': `Bearer ${accessToken}`
       },      
     };
     try {
       dispatch(getUserRequest());
-      return fetchWithAuth(baseUrl + '/auth/user', requestOptions)         
+      return fetch(baseUrl + '/auth/user', requestOptions)      
         .then(checkResponse)  
         .then(res => {
-          dispatch(getUserSuccess(res));   
+          dispatch(getUserSuccess(res));          
           return res.success;        
         })        
       }    
@@ -162,12 +179,13 @@ export const changeUserFailed = (error: string) => ({
 });
 
 export function changeUser(userData: userData) {
-  return async (dispatch: AppDispatch) => {    
+  return async (dispatch: AppDispatch) => {  
+    const accessToken = localStorage.getItem('accessToken')  
     const requestOptions = {
       method: 'PATCH',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': ''
+        'Authorization': `Bearer ${accessToken}`
       },
       body: JSON.stringify({
         "email": userData.email, 
@@ -177,7 +195,7 @@ export function changeUser(userData: userData) {
     };
     try {
       dispatch(changeUserRequest());
-      return fetchWithAuth(baseUrl + '/auth/user', requestOptions)
+      return fetch(baseUrl + '/auth/user', requestOptions)
         .then(checkResponse) 
         .then(res => {
           dispatch(changeUserSuccess(res));          
@@ -220,9 +238,10 @@ export function logoutUser() {
       return fetch(baseUrl + '/auth/logout', requestOptions)
         .then(checkResponse) 
         .then(res => {
-          dispatch(logoutUserSuccess(res));
           localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');              
+          localStorage.removeItem('refreshToken');
+          dispatch(logoutUserSuccess(res));          
+          dispatch(setIsNotLoggedIn());
           return res;        
         })        
       }    
@@ -231,4 +250,49 @@ export function logoutUser() {
       console.log(error)
     }
   };
+}
+
+
+export const refreshTokenRequest = () => ({
+  type: REFRESH_TOKEN_REQUEST
+})
+
+export const refreshTokenSuccess = (data: []) => ({
+  type: REFRESH_TOKEN_SUCCESS,
+  payload: { data }
+})
+
+export const refreshTokenFailed = (error: any) => ({
+  type: REFRESH_TOKEN_FAILED,
+  payload: { error }
+})
+
+
+export function refreshToken() {
+  return async (dispatch: AppDispatch) => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "token": refreshToken,       
+      })
+    }
+    try {
+      dispatch(refreshTokenRequest())
+      return fetch(baseUrl + '/auth/token', requestOptions)
+        .then(checkResponse) 
+        .then(res => {
+          dispatch(refreshTokenSuccess(res));
+          dispatch(setIsLoggedIn());
+          localStorage.setItem('accessToken', res.accessToken.split('Bearer ')[1]);
+          localStorage.setItem('refreshToken', res.refreshToken);          
+          return res;
+        })
+      }
+      catch(error: any) { 
+        dispatch(refreshTokenFailed(error))   
+        console.log(error)
+      }
+  }  
 }

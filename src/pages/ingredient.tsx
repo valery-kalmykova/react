@@ -22,7 +22,7 @@ const Ingredient: React.FC = () => {
       <IngredientDetails item={item}/>
     </div>    
   )  
-  return <Redirect to='/404'/>
+  return (<Redirect to='/404'/>)
 }
 
 export default Ingredient

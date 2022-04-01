@@ -8,10 +8,11 @@ import { RootState } from '../services/reducers';
 import { mailformat  } from '../utils/constants';
 
 const Profile = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();  
   const history = useHistory();
   const name = useSelector((state:RootState) => state.user.user.name);
   const email = useSelector((state:RootState) => state.user.user.email);    
+  const logoutSuccess = useSelector((state:RootState) => state.user.logoutSuccess);    
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [newUserData, setNewUserData] = useState({
@@ -95,9 +96,11 @@ const Profile = () => {
 
   const logout = async () => {  
     await dispatch(logoutUser());
-    history.replace({ pathname: '/login' });
+    if (logoutSuccess) {
+      history.replace({ pathname: '/login' });
+    }    
   };
-
+  
   return (
     <div className={styles.profileMain}>
       <div className={styles.sideBlock + ' mr-15 pl-5'}>
@@ -188,12 +191,12 @@ const Profile = () => {
               ref={passwordRef}
             />
           </div>
-          <input type="submit" style={{display: 'none'}} />
-        </form>
-        {activeButtons && <div className={styles.buttons + ' mt-10'}>
-          <Button type="primary" size="medium" onClick={submitHandler} disabled={disabledSubmit}>Сохранить</Button>
+          {activeButtons && <div className={styles.buttons + ' mt-10'}>
+          <Button type="primary" size="medium" disabled={disabledSubmit}>Сохранить</Button>
           <Button type="primary" size="medium" onClick={cancelHandler}>Отмена</Button>
         </div>}
+        </form>
+        
       </div>
     </div>
   )
