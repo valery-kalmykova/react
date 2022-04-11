@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, RefObject, useCallback} from 'react';
 import { useHistory, useLocation }from 'react-router-dom';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
-import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components'
+import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useSelector } from 'react-redux';
 import { menuItemProp } from '../../utils/constants'
 import { useDrag } from "react-dnd";

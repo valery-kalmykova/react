@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, ...restOfProps }) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn); 
   const isLoading = useSelector((state: RootState) => state.user.getRequest);
- 
+  
   useEffect(
     () => {
       if (isLoggedIn) {

@@ -29,6 +29,16 @@ export const itemDefault = {
   __v: 0,
 }
 
+export interface order {
+  _id: string,
+  name: string,
+  number: number,
+  updatedAt: string,
+  createdAt: string,
+  status: string,
+  ingredients: string
+};
+
 export interface userData {
   email?: string, 
   password: string, 
@@ -42,6 +52,7 @@ export const userDefault = {
 }
 
 export const baseUrl = 'https://norma.nomoreparties.space/api';
+export const wsUrl = 'wss://norma.nomoreparties.space/orders/all';
 
 export function checkResponse(res: any) {
   if (res.ok) {
