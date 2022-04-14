@@ -24,9 +24,10 @@ const RouteSwitch = () => {
   const keySendSuccess = localStorage.getItem('keySendSuccess');
   const background = location.state && location.state.background;  
   const itemSuccess = useSelector((state:RootState) => state.products.response); 
-  const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn);
+  const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn); 
+  const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
   
-  const expiryToken = (token) => {
+  const expiryToken = (token: string) => {
     return (JSON.parse(atob(token.split('.')[1]))).exp
   }
   function checkToken() {
@@ -61,8 +62,11 @@ const RouteSwitch = () => {
         <Route exact path='/feed'>
           <Feed/>
         </Route>
-        <Route exact path='/feedid'>
+        <Route exact path='/feed/:id'>
           <FeedDetail/>
+        </Route>
+        <Route exact path='/profile/orders/:id'>
+          {isLoggedIn ? <FeedDetail/> : <HomePage/>}
         </Route>
         <Route exact path='/register'>
           {isLoggedIn ? <HomePage/> : <Register/>}          
@@ -88,11 +92,14 @@ const RouteSwitch = () => {
           <NotFound/>
         </Route>
       </Switch>
-      {/* {background && <Route exact path='/feed/id'>
+      {background && getOrdersSuccess && <Route exact path='/feed/:id'>
           <ModalWithFeedDetail/>
         </Route>
-      } */}
-
+      }
+      {background && getOrdersSuccess && <Route exact path='/profile/orders/:id'>
+          <ModalWithFeedDetail/>
+        </Route>
+      }
       {background && itemSuccess && <Route exact path='/ingredients/:id'>
           <ModalWithIngridientDetail/>
         </Route>

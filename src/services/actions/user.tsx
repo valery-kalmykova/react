@@ -185,7 +185,7 @@ export function changeUser(userData: userData) {
       method: 'PATCH',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}` 
       },
       body: JSON.stringify({
         "email": userData.email, 

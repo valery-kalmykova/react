@@ -12,6 +12,7 @@ const Ingredient: React.FC = () => {
   const productData = useSelector((state:RootState) => state.products.productData);
   const item = productData.find((element: menuItemProp) => element._id === id);  
   const itemSuccess = useSelector((state:RootState) => state.products.response);
+  console.log(id)
   
   if (!itemSuccess) {
     return <Loader size="large" inverse={true}/>

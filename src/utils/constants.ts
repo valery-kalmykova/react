@@ -33,11 +33,21 @@ export interface order {
   _id: string,
   name: string,
   number: number,
-  updatedAt: string,
-  createdAt: string,
+  updatedAt: Date,
+  createdAt: Date,
   status: string,
-  ingredients: string
+  ingredients: string[]
 };
+
+export const orderDefault = {
+  _id: '',
+  name: '',
+  number: 0,
+  updatedAt: new Date(),
+  createdAt: new Date(),
+  status: '',
+  ingredients: []
+}
 
 export interface userData {
   email?: string, 
@@ -52,7 +62,7 @@ export const userDefault = {
 }
 
 export const baseUrl = 'https://norma.nomoreparties.space/api';
-export const wsUrl = 'wss://norma.nomoreparties.space/orders/all';
+export const wsUrl = 'wss://norma.nomoreparties.space/orders';
 
 export function checkResponse(res: any) {
   if (res.ok) {

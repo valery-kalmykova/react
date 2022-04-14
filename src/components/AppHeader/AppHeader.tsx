@@ -7,8 +7,8 @@ const AppHeader = () => {
   const history = useHistory();
   const location = useLocation();
   const activeConstructor = (location.pathname === '/');
-  const activeOrders = (location.pathname === '/feed');
-  const activeProfile = (location.pathname === '/profile');  
+  const activeOrders = (location.pathname.indexOf('/feed') === 0);
+  const activeProfile = (location.pathname.indexOf('/profile') === 0);  
 
   return (
     <header className={appHeaderStyles.header}>

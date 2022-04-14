@@ -1,17 +1,25 @@
 export const socketMiddleware = (wsUrl, wsActions) => {
   return store => {
-    let socket;
+    let socket;    
 
-    return next => action => {
+    return next => action => {      
       const { dispatch } = store;
       const { type, payload } = action;
-      const { wsInit, wsSendOrder, onOpen, onClose, onError, onMessage } = wsActions;
+      const { wsInit, onOpen, onClose, onError, onMessage } = wsActions;
+      const token = localStorage.getItem('accessToken');      
       
       if (type === wsInit) {
-        socket = new WebSocket(`${wsUrl}`);
-      }
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.close();          
+        } 
+        if (window.location.pathname.indexOf('/feed') === 0) {
+          socket = new WebSocket(`${wsUrl}/all`);          
+        } else if (window.location.pathname.indexOf('/profile/orders') === 0) {
+          socket = new WebSocket(`${wsUrl}?token=${token}`);          
+        }      
+      } 
       if (socket) {
-        socket.onopen = event => {          
+        socket.onopen = event => {                   
           dispatch({ type: onOpen, payload: event });          
         };
 
@@ -21,18 +29,13 @@ export const socketMiddleware = (wsUrl, wsActions) => {
 
         socket.onmessage = event => {          
           const { data } = event;
-          const parsedData = JSON.parse(data);          
+          const parsedData = JSON.parse(data); 
           dispatch({ type: onMessage, payload: parsedData });
-        };
-
+        };        
+        
         socket.onclose = event => {
           dispatch({ type: onClose, payload: event });
-        };
-
-        // if (type === wsSendOrder) {
-        //   const order = { ...payload, token: user.token };
-        //   socket.send(JSON.stringify(order));
-        // }
+        }; 
       }
 
       next(action);

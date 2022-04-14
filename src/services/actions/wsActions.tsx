@@ -3,7 +3,6 @@ export const WS_CONNECTION_SUCCESS = 'WS_CONNECTION_SUCCESS';
 export const WS_CONNECTION_ERROR = 'WS_CONNECTION_ERROR';
 export const WS_CONNECTION_CLOSED = 'WS_CONNECTION_CLOSED';
 export const WS_GET_ORDERS = 'WS_GET_ORDERS';
-export const WS_SEND_ORDER = 'WS_SEND_ORDER';
 
 export const wsConnectionSuccess = () => {
   return {
@@ -26,13 +25,6 @@ export const wsConnectionClosed = () => {
 export const wsGetOrders = order => {
   return {
     type: WS_GET_ORDERS,
-    payload: order
-  };
-};
-
-export const wsSendOrder = order => {
-  return {
-    type: WS_SEND_ORDER,
     payload: order
   };
 };

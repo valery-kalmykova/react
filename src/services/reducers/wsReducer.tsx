@@ -5,10 +5,11 @@ import {
   WS_GET_ORDERS
 } from '../actions/wsActions';
 import { AnyAction } from 'redux';
+import { order, orderDefault } from '../../utils/constants';
 
 interface iinitialState {
   wsConnected: boolean,
-  orders: String[],
+  orders: order[],
   total: number,
   totalToday: number,
   getOrdersSuccess: boolean
@@ -16,7 +17,7 @@ interface iinitialState {
 
 const initialState = {
   wsConnected: false,
-  orders: [],  
+  orders: [orderDefault],  
   total: 0,
   totalToday: 0,
   getOrdersSuccess: false
