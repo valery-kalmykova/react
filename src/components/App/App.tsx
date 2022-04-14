@@ -9,7 +9,9 @@ import { RootState } from '../../services/reducers';
 import { Loader } from '../../ui/Loader/Loader';
 
 const App = () => {   
-  const dispatch = useDispatch();   
+  const dispatch = useDispatch();
+  const wsConnected = useSelector((state:RootState) => state.wsReducer.wsConnected);
+  console.log(wsConnected)
   
   useEffect(
     () => {

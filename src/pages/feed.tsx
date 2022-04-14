@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import styles from './pages.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import OrderFeed from '../components/OrderFeed/OrderFeed';
 import OrderFeedTotals from '../components/OrderFeedTotals/OrderFeedTotals';
-import { WS_CONNECTION_START } from '../services/actions/wsActions';
+import { WS_CONNECTION_START, WS_CONNECTION_CLOSED } from '../services/actions/wsActions';
+import { RootState } from '../services/reducers';
 
 const Feed = () => {
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
+  const wsConnected = useSelector((state:RootState) => state.wsReducer.wsConnected);
   
   useEffect(
     () => {      
@@ -14,6 +16,16 @@ const Feed = () => {
     },
     [dispatch]
   );
+
+  useEffect(
+    () => {
+      return () => {
+        if(wsConnected) {          
+          dispatch({ type: WS_CONNECTION_CLOSED })
+        }        
+      }
+    }, [wsConnected, dispatch]
+  )
 
   return (         
     <div className={styles.mainFeed}>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styles from './pages.module.css';
 import { useDispatch } from 'react-redux';
-import { WS_CONNECTION_START } from '../services/actions/wsActions';
+import { WS_CONNECTION_START, WS_CONNECTION_CLOSED } from '../services/actions/wsActions';
 import { useSelector } from 'react-redux';
 import { useParams, Redirect }from 'react-router-dom';
 import OrderFeedDetail from '../components/OrderFeedDetail/OrderFeedDetail';
@@ -14,6 +14,7 @@ const FeedDetail: React.FC = () => {
   const orders = useSelector((state:RootState) => state.wsReducer.orders);
   const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
   const order = orders.find((element: order) => element._id === id);
+  const wsConnected = useSelector((state:RootState) => state.wsReducer.wsConnected);
 
   const dispatch = useDispatch(); 
   
@@ -23,6 +24,16 @@ const FeedDetail: React.FC = () => {
     },
     [dispatch]
   );
+
+  useEffect(
+    () => {
+      return () => {
+        if(wsConnected) {          
+          dispatch({ type: WS_CONNECTION_CLOSED })
+        }        
+      }
+    }, [wsConnected, dispatch]
+  )
 
   if (!getOrdersSuccess) {
     return <Loader size="large" inverse={true}/>
