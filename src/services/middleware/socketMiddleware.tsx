@@ -5,7 +5,7 @@ export const socketMiddleware = (wsUrl, wsActions) => {
     return next => action => {      
       const { dispatch } = store;
       const { type, payload } = action;
-      const { wsInit, onOpen, onClose, onError, onMessage } = wsActions;
+      const { wsInit, onOpen, onClose, onError, onMessage, wsSendMessage } = wsActions;
       const token = localStorage.getItem('accessToken');      
       
       if (type === wsInit) {
@@ -36,6 +36,12 @@ export const socketMiddleware = (wsUrl, wsActions) => {
         socket.onclose = event => {
           dispatch({ type: onClose, payload: event });
         }; 
+
+        if (type === wsSendMessage) {
+          const message = { ...payload, token: token };
+          socket.send(JSON.stringify(message));
+        }
+
       }
 
       next(action);
