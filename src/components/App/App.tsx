@@ -10,13 +10,14 @@ import { Loader } from '../../ui/Loader/Loader';
 
 const App = () => {   
   const dispatch = useDispatch(); 
+  
   useEffect(
     () => {
-      dispatch(getItems());
+      dispatch(getItems());  
     },
     [dispatch]
-  ); 
-  
+  );
+
   const isLoarding = useSelector((state:RootState) => state.products.itemsRequest);  
   
   if (isLoarding) {

@@ -5,10 +5,10 @@ import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-dev
 
 const AppHeader = () => {   
   const history = useHistory();
-  let location = useLocation();
+  const location = useLocation();
   const activeConstructor = (location.pathname === '/');
-  const activeOrders = (location.pathname === '/orders');
-  const activeProfile = (location.pathname === '/profile');  
+  const activeOrders = (location.pathname.indexOf('/feed') === 0);
+  const activeProfile = (location.pathname.indexOf('/profile') === 0);  
 
   return (
     <header className={appHeaderStyles.header}>
@@ -26,7 +26,7 @@ const AppHeader = () => {
               </button>              
             </li>
             <li className={appHeaderStyles.navItem + ' pr-5 pl-5 pt-4 pb-4'}>
-              <button className={appHeaderStyles.autorization} onClick={() => history.replace({ pathname: '/orders' })}>
+              <button className={appHeaderStyles.autorization} onClick={() => history.replace({ pathname: '/feed' })}>
                 <ListIcon type={activeOrders ? "primary" :"secondary"} />
                 <p className={
                   activeOrders ? 

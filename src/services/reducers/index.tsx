@@ -3,7 +3,8 @@ import { productsReducer } from './products';
 import { ingredientDetailReducer } from './ingredientDetail';
 import { orderReducer } from './order'
 import { userReducer } from './user'
-import { passwordReducer } from './password'
+import { passwordReducer } from './password';
+import { wsReducer } from './wsReducer'
 
 export const rootReducer = combineReducers({
   products: productsReducer,
@@ -11,6 +12,7 @@ export const rootReducer = combineReducers({
   order: orderReducer,  
   user: userReducer,
   password: passwordReducer,
+  wsReducer: wsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>

@@ -1,18 +1,16 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { changeUser, logoutUser } from '../services/actions/user';
+import { changeUser } from '../services/actions/user';
 import { RootState } from '../services/reducers';
 import { mailformat  } from '../utils/constants';
+import ProfileNavigation from '../components/ProfileNavigation/ProfileNavigation'
 
 const Profile = () => {
-  const dispatch = useDispatch();  
-  const history = useHistory();
+  const dispatch = useDispatch();    
   const name = useSelector((state:RootState) => state.user.user.name);
-  const email = useSelector((state:RootState) => state.user.user.email);    
-  const logoutSuccess = useSelector((state:RootState) => state.user.logoutSuccess);    
+  const email = useSelector((state:RootState) => state.user.user.email);  
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [newUserData, setNewUserData] = useState({
@@ -93,39 +91,10 @@ const Profile = () => {
     },
     [newUserData, disabled, name, email, hasError, isChanged]
   );
-
-  const logout = async () => {  
-    await dispatch(logoutUser());
-    if (logoutSuccess) {
-      history.replace({ pathname: '/login' });
-    }    
-  };
   
   return (
     <div className={styles.profileMain}>
-      <div className={styles.sideBlock + ' mr-15 pl-5'}>
-        <ul className={styles.nav}>
-          <li className={styles.navLink + ' text text_type_main-medium'}>
-            <NavLink 
-              to={{ pathname: `/profile` }}
-              className={styles.link}
-              activeClassName={styles.activeLink}
-            >Профиль</NavLink>
-          </li>  
-          <li className={styles.navLink + ' text text_type_main-medium'}>
-            <NavLink 
-              to={{ pathname: `/404` }}
-              className={styles.link}            
-            >История заказов</NavLink>            
-          </li> 
-          <li className={styles.navLink}>    
-            <button onClick={logout} className={styles.logoutBtn  + ' text text_type_main-medium text_color_inactive'}>Выход</button>
-          </li> 
-        </ul>
-        <p className='text text_type_main-default text_color_inactive mt-20'>
-          В этом разделе вы можете изменить свои персональные данные
-        </p>
-      </div>
+      <ProfileNavigation/>
       <div>
         <form className={styles.items} onSubmit={submitHandler}>
           <div className={styles.item + ' mb-6'}>

@@ -48,11 +48,12 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
   ); 
 
   const getIdsInOrder = useCallback((productData: menuItemProp[]) => {
-    const newArr: string[] = []
+    let newArr:string[] = []
     productData.map((dataElement: menuItemProp) => {
       const countMinItemInOrder = 1;      
       if (dataElement.__v >= countMinItemInOrder) {
-        newArr.push(dataElement._id)           
+        const arr:string[] = Array(dataElement.__v).fill(dataElement._id);        
+        newArr.push(...arr);
       }
     })    
     return newArr
@@ -61,10 +62,10 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
   const onClickOrderHandler = useCallback(() => {     
     if(!isUserLoaded) {
       history.replace({ pathname: '/login' });
-    } else {     
+    } else {      
       const idInOrder: string[] = getIdsInOrder(productData);     
       dispatch(getOrderNumber(idInOrder));    
-      handleOpenModal(orderNumber); 
+      handleOpenModal(orderNumber);     
     }       
   },[getIdsInOrder, dispatch, handleOpenModal, orderNumber, productData, history, isUserLoaded])
 
