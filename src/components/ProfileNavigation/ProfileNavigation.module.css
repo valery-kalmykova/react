@@ -1,0 +1,16 @@
+.sideBlock {
+  max-width: 320px;
+}
+
+.nav {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  min-width: 320px;
+}
+
+.link{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}

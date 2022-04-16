@@ -23,6 +23,9 @@
 }
 
 .logo {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
   float: none;
   position: absolute;
   top: 50%;
@@ -31,5 +34,9 @@
 }
 
 .autorization {
-  display: flex;  
+  display: flex;
+  background-color: transparent;
+  border: none;
+  color: var(--text-primary-color);
+  cursor: pointer;
 }

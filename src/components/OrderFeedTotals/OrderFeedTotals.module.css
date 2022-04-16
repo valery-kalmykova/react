@@ -1,0 +1,37 @@
+
+.columnRight {
+  min-width: 540px;
+}
+.columnsInOrder{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.columnInOrder {
+  flex-grow: 1; 
+}
+
+.list{  
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 250px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: hidden;  
+}
+
+.item {
+  width: 50%;
+}
+
+.itemDone {
+  color: #00CCCC;
+  width: 50%;
+}
+
+.itemDone:last-of-type {
+  display: inherit;
+}

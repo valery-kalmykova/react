@@ -1,88 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router }from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
-import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
-import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
-import Modal from '../Modal/Modal';
-import OrderDetails from '../OrderDetails/OrderDetails';
-import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import appStyle from './App.module.css';
-import { menuItemProp } from '../../utils/constants'
+import RouteSwitch from '../RouteSwitch/RouteSwitch'
 import { useDispatch, useSelector } from 'react-redux';
-import { handleOpenIngredientDetail, handleCloseIngredientDetail } from '../../services/actions/ingredientDetail';
-import { handleOpenOrder, handleCloseOrder } from '../../services/actions/order';
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { ADD_DRAGGED_ELEMENTS, INCREASE_COUNT_ELEMENTS_IN_ORDER, DELETE_PREV_BUN_ELEMENT, setKeyValue} from '../../services/actions/products';
-import { Loader } from '../../ui/Loader/Loader'
+import { getItems } from '../../services/actions/products';
+import { RootState } from '../../services/reducers';
+import { Loader } from '../../ui/Loader/Loader';
 
-
-const App = () => { 
-  const dispatch = useDispatch();
-
-  interface RootState {
-    ingredientDetail:{ 
-      item: menuItemProp,
-      isVisibleModal: boolean,
+const App = () => {   
+  const dispatch = useDispatch(); 
+  
+  useEffect(
+    () => {
+      dispatch(getItems());  
     },
-    order: {
-      orderNumber: number,
-      isVisibleModalOrder: boolean,
-      orderRequest: boolean
-    }
-  }
-  const itemIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.item);
-  const isVisibleModalIngredientDetail = useSelector((state: RootState) => state.ingredientDetail.isVisibleModal);
+    [dispatch]
+  );
 
-  const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
- 
-
-  const openIngredientDetail = (item: menuItemProp) => {    
-    dispatch(handleOpenIngredientDetail(item))
-  }  
-  const closeIngredientDetail = () => {    
-    dispatch(handleCloseIngredientDetail())
+  const isLoarding = useSelector((state:RootState) => state.products.itemsRequest);  
+  
+  if (isLoarding) {
+    return (<Loader size="large" inverse={true}/>)
   }
   
-  const openOrder = (orderNumber: number) => {
-    dispatch(handleOpenOrder(orderNumber))
-  }
-  const closeOrder = () => {
-    dispatch(handleCloseOrder())
-  }
-
-  const handleDrop = (dataElement: menuItemProp) => {
-    if (dataElement.type === 'bun') {
-      dispatch({
-        type: DELETE_PREV_BUN_ELEMENT
-      })
-    }; 
-    dispatch(setKeyValue(dataElement));
-    dispatch({
-      type: ADD_DRAGGED_ELEMENTS,
-      dataElement
-    });    
-    dispatch({
-      type: INCREASE_COUNT_ELEMENTS_IN_ORDER,
-      dataElement
-    });     
-  };
-
   return (
-    <div className={appStyle.app}>
-      <AppHeader /> 
-        <DndProvider backend={HTML5Backend}>             
-        <div className={appStyle.main}>
-          <BurgerIngredients handleOpenModal={openIngredientDetail}/>
-          <BurgerConstructor handleOpenModal={openOrder} onDropHandler={handleDrop}/>        
-        </div>
-        </DndProvider>
-        {isVisibleModalIngredientDetail && <Modal title='Детали ингредиента' handleClose={closeIngredientDetail}>        
-          <IngredientDetails item={itemIngredientDetail}/>
-        </Modal>}
-        {isVisibleModalOrder && <Modal title='' handleClose={closeOrder}>
-          {orderRequest ? <Loader size="large" inverse={true}/> : <OrderDetails orderNumber={orderNumber}/>}        
-        </Modal>}   
-    </div>
+    <Router>
+      <div className={appStyle.app}>
+        <AppHeader />
+        <RouteSwitch/>
+      </div>
+    </Router>
+    
   );
 }
 

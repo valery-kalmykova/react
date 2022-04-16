@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 640px;
+  height: calc(100vh - 410px);
+  min-height: 620px;
+  padding-bottom: 30px;  
+}
+
+.number {
+  align-self: center;
+}
+
+.scrollContainer {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;  
+}
+
+.scrollContainer::-webkit-scrollbar {
+  width: 8px;  
+  background-color: #2F2F37;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  border: 3px solid #8585AD
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.itemTotals {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: auto;
+  gap: 7px;
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+  background-image: 
+    linear-gradient(#1C1C21, #1C1C21), 
+    linear-gradient(45deg,#801AB2,#4C4CFF);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  border: 2px solid transparent;
+  border-radius: 100px;
+}
+
+.totals {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.totalPrice {
+  margin-left: auto;
+}

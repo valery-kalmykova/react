@@ -12,7 +12,7 @@ import {
 } from '../actions/products'
 import { CLEAR_CONSTRUCTOR } from '../actions/order'
 import { AnyAction } from 'redux';
-import { menuItemProp } from '../../utils/constants';
+import { menuItemProp, itemDefault } from '../../utils/constants';
 
 interface iinitialState {
   currentTab: string,
@@ -20,6 +20,7 @@ interface iinitialState {
   productData: menuItemProp[],
   itemsRequest: boolean,
   itemsFailed: boolean,
+  response: boolean,
 
   bunIngridientInOrder: menuItemProp[],
   notBunIngridientsInOrder: menuItemProp[],  
@@ -28,9 +29,10 @@ interface iinitialState {
 const initialState:iinitialState = {
   currentTab: 'Булки',
 
-  productData: [],
+  productData: [itemDefault],
   itemsRequest: false,
   itemsFailed: false,
+  response: false,
 
   bunIngridientInOrder: [],
   notBunIngridientsInOrder: [], 
@@ -51,7 +53,8 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         itemsFailed: false,
-        productData: action.payload.data,
+        productData: action.payload.data.data,
+        response: true,
         itemsRequest: false,
       }      
     }

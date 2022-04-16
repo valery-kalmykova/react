@@ -42,8 +42,8 @@ export function getItems() {
     return fetch(baseUrl + '/ingredients')
       .then(checkResponse)
       .then(json => {
-        dispatch(fetchProductsSuccess(json.data));              
-        return json.data;       
+        dispatch(fetchProductsSuccess(json));        
+        return json;       
       })
       .catch(error => dispatch(fetchProductsFailed(error)));
   };

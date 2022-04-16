@@ -39,10 +39,14 @@ export const clearConstructor = () => ({
 
 export function getOrderNumber(idInOrder: String[]) {
   return async (dispatch: AppDispatch) => {
+    const accessToken = localStorage.getItem('accessToken')
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "ingredients": idInOrder })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+       },
+      body: JSON.stringify({ "ingredients": idInOrder }) 
     };
     try {
       dispatch(fetchOrderRequest());
@@ -50,7 +54,7 @@ export function getOrderNumber(idInOrder: String[]) {
         .then(checkResponse) 
         .then(json => {
           dispatch(fetchOrderSuccess(json.order.number));  
-          dispatch(clearConstructor());                
+          dispatch(clearConstructor());                         
           return json.order.number;        
         })        
       }    
