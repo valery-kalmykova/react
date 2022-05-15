@@ -10,7 +10,7 @@ interface CurrentBunElementProps {
   dataElement: menuItemProp
 }
 
-const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps): JSX.Element | null => {    
+const CurrentBunElement = ({type, typeText, dataElement}:CurrentBunElementProps) => {    
   
   return (
     <li className={burgerConstructorStyles.constructorElementLocked + ' ml-8'}>

@@ -1,4 +1,4 @@
-export interface menuItemProp {
+export interface menuItemProp {  
   _id: string,
   name: string,
   type: string,
@@ -50,9 +50,14 @@ export const orderDefault = {
 }
 
 export interface userData {
-  email?: string, 
+  email: string, 
   password: string, 
-  name?: string
+  name: string
+}
+
+export interface loginData {
+  email: string, 
+  password: string  
 }
 
 export const userDefault = {

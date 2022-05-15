@@ -12,7 +12,7 @@ interface CardProps {
   dataElement: menuItemProp  
 }
 
-const Card: React.FC<CardProps> = ({dataElement}) => {  
+const Card = ({dataElement}: CardProps) => {  
   const [, dragRef] = useDrag({
     type: 'item',  
     item: dataElement,
@@ -51,10 +51,10 @@ interface TypeCardsProps {
 }
 
 
-const TypeCards: React.FC<TypeCardsProps> = ({type, productData}) => {
+const TypeCards = ({type, productData}: TypeCardsProps) => {
   return (
     <div className={burgerIngredientsStyles.cards + ' ml-4 mr-2'}>
-      {productData.map((dataElement) => {
+      {productData.map((dataElement: menuItemProp) => {
         if (dataElement.type === type) {
           return <Card 
           dataElement={dataElement} 
@@ -67,7 +67,7 @@ const TypeCards: React.FC<TypeCardsProps> = ({type, productData}) => {
 }
 
 
-const BurgerIngredients: React.FC = () => {  
+const BurgerIngredients = () => {  
   const productData = useSelector((state:RootState) => state.products.productData);
   
   const main = useRef(null) as RefObject<HTMLHeadingElement>;

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, useLocation, Switch }from 'react-router-dom';
+import { Route, useLocation, Switch}from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import HomePage from '../../pages/home';
 import Login from '../../pages/login';
@@ -18,8 +18,12 @@ import ModalWithFeedDetail from '../Modal/ModalWithFeedDetail'
 import { RootState } from '../../services/reducers';
 import { refreshToken, setIsLoggedIn, setIsNotLoggedIn } from '../../services/actions/user';
 
+interface LocationState {  
+  background: any
+}
+
 const RouteSwitch = () => {
-  const location = useLocation();
+  const location = useLocation<LocationState>();
   const dispatch = useDispatch();
   const keySendSuccess = localStorage.getItem('keySendSuccess');
   const background = location.state && location.state.background;  

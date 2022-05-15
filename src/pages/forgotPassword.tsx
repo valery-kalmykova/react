@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
@@ -23,7 +23,7 @@ const ForgotPassword = () => {
     [history]
   );
 
-  const submitHandler = async (e) => {  
+  const submitHandler = async (e: SyntheticEvent) => {  
     e.preventDefault();
     if (disabledSubmit) return
     await dispatch(forgotPassword(email));

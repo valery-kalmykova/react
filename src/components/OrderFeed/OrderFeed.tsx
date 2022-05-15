@@ -11,7 +11,7 @@ interface OrderCardProps {
   order: order,
   path: string
 }
-const OrderCard: React.FC<OrderCardProps> = ({order, path}) => {  
+const OrderCard = ({order, path}: OrderCardProps) => {  
   const location = useLocation();
   const history = useHistory();
   const ordersProfilePath = (location.pathname === '/profile/orders');
@@ -74,14 +74,14 @@ interface OrderFeedProps {
   path: string
 }
 
-const OrderFeed: React.FC<OrderFeedProps> = ({path}) => {
+const OrderFeed = ({path}: OrderFeedProps) => {
   const orders = useSelector((state:RootState) => state.wsReducer.orders);
   const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
   
   if (getOrdersSuccess) {
     return (
       <div className={styles.section}>
-        {orders.sort((a, b) => {
+        {orders.sort((a: order, b: order) => {
           return b.number - a.number
         })
           .map((order: order) => {

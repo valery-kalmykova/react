@@ -5,7 +5,7 @@ interface ModalOverlayProps {
   handleClose: () => void
 }
 
-const ModalOverlay: React.FC<ModalOverlayProps> = ({handleClose}) => {    
+const ModalOverlay = ({handleClose}: ModalOverlayProps) => {    
   
   return (
     <div className={modalOverlayStyle.backdrop} onClick={handleClose}></div>

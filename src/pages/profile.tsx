@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -44,7 +44,7 @@ const Profile = () => {
     isChanged.name || isChanged.email || isChanged.password
   )
   
-  const submitHandler = async (e) => {
+  const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (disabledSubmit) return
     await dispatch(changeUser(newUserData));
@@ -91,7 +91,7 @@ const Profile = () => {
     },
     [newUserData, disabled, name, email, hasError, isChanged]
   );
-  
+   
   return (
     <div className={styles.profileMain}>
       <ProfileNavigation/>

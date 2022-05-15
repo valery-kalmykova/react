@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../services/actions/user';
@@ -36,7 +36,7 @@ const Register = () => {
     [history]
   );
 
-  const submitHandler = async (e) => { 
+  const submitHandler = async (e: SyntheticEvent) => { 
     e.preventDefault();
     if (disabledSubmit) return 
     await dispatch(registerUser(userData));

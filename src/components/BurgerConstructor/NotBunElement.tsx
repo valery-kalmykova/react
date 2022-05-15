@@ -18,7 +18,7 @@ interface DragItem {
   type: string
 }
 
-const CurrentNotBunElement = ({dataElement, onClickdelete, id, index, moveCard}: CurrentnotBunElementProps): JSX.Element | null => {
+const CurrentNotBunElement = ({dataElement, onClickdelete, id, index, moveCard}: CurrentnotBunElementProps) => {
  
   const ref = useRef<HTMLLIElement>(null)
   const [{ handlerId}, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({

@@ -6,23 +6,23 @@ import {
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAILED, 
 } from '../actions/password';
-import { AnyAction } from 'redux';
+import type { IPasswordActions } from '../actions/password';
 
-interface iinitialState { 
+interface IinitialState { 
   forgotPasswordRequest: boolean,
   forgotPasswordFailed: boolean,
   resetPasswordRequest: boolean,
   resetPasswordFailed: boolean,
 }
 
-const initialState:iinitialState = { 
+const initialState:IinitialState = { 
   forgotPasswordRequest: false,
   forgotPasswordFailed: false,
   resetPasswordRequest: false,
   resetPasswordFailed: false,
 }
 
-export const passwordReducer = (state = initialState, action: AnyAction) => {
+export const passwordReducer = (state = initialState, action: IPasswordActions): IinitialState => {
   switch (action.type) {
     case FORGOT_PASSWORD_REQUEST: {
       return {

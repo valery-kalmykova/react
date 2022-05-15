@@ -21,7 +21,7 @@ interface BurgerConstructorProps {
   onDropHandler: (dataElement: menuItemProp) => void
 }
 
-const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, onDropHandler}) => {  
+const BurgerConstructor = ({handleOpenModal, onDropHandler}: BurgerConstructorProps) => {  
   const dispatch = useDispatch();  
   const history = useHistory();
   const bunIngridientInOrder = useSelector((state: RootState) => state.products.bunIngridientInOrder);
@@ -34,14 +34,14 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
    
   const [, dropTarget] = useDrop({
     accept: "item",    
-    drop(dataElement: menuItemProp) {
-        onDropHandler(dataElement);        
+    drop(dataElement: menuItemProp) {      
+      onDropHandler(dataElement);         
     }        
   }); 
   
   useEffect(
     () => { 
-      const totalnotBunIngridients = notBunIngridientsInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0);
+      const totalnotBunIngridients = notBunIngridientsInOrder.reduce((total: number, dataElement: menuItemProp) => { return total + dataElement.price}, 0);
       const bunIngridient = bunIngridientInOrder.reduce((total: number, dataElement) => { return total + dataElement.price}, 0)    
       setTotalPrice(totalnotBunIngridients + bunIngridient);   
     }, [setTotalPrice, notBunIngridientsInOrder, bunIngridientInOrder]
@@ -105,7 +105,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({handleOpenModal, o
         })}        
 
         <ul className={burgerConstructorStyles.scrollSection + ' pr-4'}>
-          {notBunIngridientsInOrder.map((dataElement, index) => {            
+          {notBunIngridientsInOrder.map((dataElement: menuItemProp, index: number) => {            
             return (
               <CurrentNotBunElement 
                 dataElement={dataElement} 

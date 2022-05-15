@@ -8,17 +8,16 @@ import { menuItemProp } from '../utils/constants';
 import { Loader } from '../ui/Loader/Loader';
 
 const Ingredient: React.FC = () => {  
-  const { id } = useParams();  
+  const { id } = useParams<{id?: string}>();  
   const productData = useSelector((state:RootState) => state.products.productData);
   const item = productData.find((element: menuItemProp) => element._id === id);  
-  const itemSuccess = useSelector((state:RootState) => state.products.response);
-  console.log(id)
+  const itemSuccess = useSelector((state:RootState) => state.products.response); 
   
   if (!itemSuccess) {
     return <Loader size="large" inverse={true}/>
   }
   
-  if (itemSuccess) return (    
+  if (itemSuccess && item) return (    
     <div className={styles.ingredientMain}>
       <IngredientDetails item={item}/>
     </div>    

@@ -6,7 +6,7 @@ interface OrderDetailsProps {
   orderNumber: number
 }
 
-const OrderDetails: React.FC<OrderDetailsProps> = ({orderNumber}) => {
+const OrderDetails = ({orderNumber}: OrderDetailsProps) => {
   return (
     <div className={orderDetailsStyle.content}>
           <p className="text text_type_digits-large">{orderNumber}</p>

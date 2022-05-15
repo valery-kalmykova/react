@@ -8,13 +8,13 @@ import {
   DELETE_PREV_BUN_ELEMENT,
   INCREASE_COUNT_ELEMENTS_IN_ORDER,
   DECREASE_COUNT_ELEMENTS_IN_ORDER,
-  SORT_INGRIDIENTS_IN_CONSTRUCTOR  
+  SORT_INGRIDIENTS_IN_CONSTRUCTOR,  
 } from '../actions/products'
 import { CLEAR_CONSTRUCTOR } from '../actions/order'
-import { AnyAction } from 'redux';
+import type { IProductsActions } from '../actions/products';
 import { menuItemProp, itemDefault } from '../../utils/constants';
 
-interface iinitialState {
+interface IinitialState {
   currentTab: string,
 
   productData: menuItemProp[],
@@ -26,7 +26,7 @@ interface iinitialState {
   notBunIngridientsInOrder: menuItemProp[],  
 }
 
-const initialState:iinitialState = {
+const initialState:IinitialState = {
   currentTab: 'Булки',
 
   productData: [itemDefault],
@@ -38,7 +38,7 @@ const initialState:iinitialState = {
   notBunIngridientsInOrder: [], 
 }
 
-export const productsReducer = (state = initialState, action: AnyAction) => {
+export const productsReducer = (state = initialState, action: IProductsActions): IinitialState => {
   switch (action.type) {
 
     case GET_ITEMS_REQUEST: {
@@ -64,7 +64,7 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
         ...state,
         itemsFailed: true, 
         itemsRequest: false,
-        items: []
+        productData: [itemDefault]
       }
     }
 
@@ -72,9 +72,9 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         bunIngridientInOrder: [...state.bunIngridientInOrder, ...state.productData.filter((element: menuItemProp) => 
-          element._id === action.dataElement._id && action.dataElement.type === 'bun')],
+          element._id === action.payload.dataElement._id && action.payload.dataElement.type === 'bun')],
         notBunIngridientsInOrder: [...state.notBunIngridientsInOrder, ...state.productData.filter((element: menuItemProp) => 
-          element._id === action.dataElement._id && (action.dataElement.type === 'main' || action.dataElement.type === 'sauce'))],       
+          element._id === action.payload.dataElement._id && (action.payload.dataElement.type === 'main' || action.payload.dataElement.type === 'sauce'))],       
       }
     }  
     case SET_KEY_VALUE: {
@@ -88,21 +88,21 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         productData: [...state.productData].map((element: menuItemProp) =>
-         element._id === action.dataElement._id ? { ...element, __v: ++element.__v } : element),        
+         element._id === action.payload.dataElement._id ? { ...element, __v: ++element.__v } : element),        
       }
     }
     case DECREASE_COUNT_ELEMENTS_IN_ORDER: {
       return {
         ...state,
         productData: [...state.productData].map((element: menuItemProp) => 
-        element._id === action.dataElement._id ? { ...element, __v: --element.__v } : element),        
+        element._id === action.payload.dataElement._id ? { ...element, __v: --element.__v } : element),        
       }
     }        
     case DELETE_DRAGGED_ELEMENTS: {
       return {
         ...state,
         notBunIngridientsInOrder: [...state.notBunIngridientsInOrder].filter((element: menuItemProp) => 
-        element.uuid !== action.dataElement.uuid)
+        element.uuid !== action.payload.dataElement.uuid)
       }
     }
     case DELETE_PREV_BUN_ELEMENT: {
@@ -116,7 +116,7 @@ export const productsReducer = (state = initialState, action: AnyAction) => {
     case SORT_INGRIDIENTS_IN_CONSTRUCTOR: {
       return {
         ...state,
-        notBunIngridientsInOrder: action.newSortIndridients
+        notBunIngridientsInOrder: action.payload.newSortIndridients
       }
     }
     case CLEAR_CONSTRUCTOR: {

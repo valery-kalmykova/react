@@ -10,7 +10,7 @@ import { Loader } from '../ui/Loader/Loader';
 import { order } from '../utils/constants';
 
 const FeedDetail: React.FC = () => {  
-  const { id } = useParams();
+  const { id } = useParams<{id?: string}>();
   const orders = useSelector((state:RootState) => state.wsReducer.orders);
   const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
   const order = orders.find((element: order) => element._id === id);
@@ -39,7 +39,7 @@ const FeedDetail: React.FC = () => {
     return <Loader size="large" inverse={true}/>
   }
 
-  if (getOrdersSuccess) {
+  if (getOrdersSuccess && order) {
     return (
       <div className={styles.mainFeedDetail}>
         <p className={styles.mainFeedDetailNumber + " text text_type_digits-default"}>{'#'+order.number}</p>

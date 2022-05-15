@@ -6,7 +6,7 @@ interface IngredientDetailsProps {
   item: menuItemProp
 }
 
-const IngredientDetails: React.FC<IngredientDetailsProps> = ({item}) => {
+const IngredientDetails = ({item}: IngredientDetailsProps) => {
   
   return (
     <div className={ingredientDetailsStyle.content}>      

@@ -10,7 +10,7 @@ interface IngredientInOrderProps {
   element: menuItemProp
 }
 
-const IngredientInOrder: React.FC<IngredientInOrderProps> = ({element}) => {
+const IngredientInOrder = ({element}: IngredientInOrderProps) => {
   return (
     <li className={styles.item + ' mb-4 mr-6'}>
       <img src={element.image} alt={element.name} className={styles.image}/>
@@ -29,7 +29,7 @@ interface OrderFeedDetailProps {
   order: order
 }
 
-const OrderFeedDetail: React.FC<OrderFeedDetailProps> = ({order}) => {
+const OrderFeedDetail = ({order}: OrderFeedDetailProps) => {
   const productData = useSelector((state:RootState) => state.products.productData);
   const status = useFormatStatus(order);
 

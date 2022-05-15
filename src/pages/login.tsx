@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../services/actions/user';
@@ -7,10 +7,14 @@ import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-component
 import { mailformat  } from '../utils/constants';
 import { RootState } from '../services/reducers';
 
+interface LocationState {    
+  from: string
+}
+
 const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { state } = useLocation();
+  const { state } = useLocation<LocationState>();
   const [userData, setUserData] = useState({
     email: '',
     password: '',    
@@ -28,7 +32,7 @@ const Login = () => {
     setPasswordShow(!passwordShow)
   }
 
-  const submitHandler = async (e) => { 
+  const submitHandler = async (e: SyntheticEvent) => { 
     e.preventDefault();
     if (disabledSubmit) return
     await dispatch(loginUser(userData)); 

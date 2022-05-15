@@ -5,23 +5,23 @@ import {
   GET_ORDER_REQUEST,
   GET_ORDER_SUCCESS,  
 } from '../actions/order';
-import { AnyAction } from 'redux';
+import type { IOrderActions } from '../actions/order';
 
-interface iinitialState { 
+interface IinitialState { 
   orderNumber: number,
   isVisibleModalOrder: boolean,
   orderRequest: boolean,
   orderFailed: boolean,
 }
 
-const initialState:iinitialState = {
+const initialState:IinitialState = {
   orderNumber: 0,
   isVisibleModalOrder: false,
   orderRequest: false,
   orderFailed: false,
 }
 
-export const orderReducer = (state = initialState, action: AnyAction) => {
+export const orderReducer = (state = initialState, action: IOrderActions): IinitialState => {
   switch (action.type) {
     case HANDLE_OPEN_ORDER: {
       return {

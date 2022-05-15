@@ -5,7 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../services/reducers';
 import { getUser } from '../../services/actions/user';
 
-export default function ProtectedRoute({ children, ...restOfProps }) { 
+interface ProtectedRouteProps {
+  children: JSX.Element,
+  exact: boolean,
+  path: string
+}
+
+export default function ProtectedRoute({ children, ...restOfProps }: ProtectedRouteProps) { 
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn); 
   const isLoading = useSelector((state: RootState) => state.user.getRequest);
