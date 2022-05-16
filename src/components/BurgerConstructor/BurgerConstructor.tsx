@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback } from 'react';
 import burgerConstructorStyles from './BurgerConstructor.module.css';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/hooks/hooks';
 import { getOrderNumber } from '../../services/actions/order';
 import { menuItemProp } from '../../utils/constants';
 import { useDrop } from "react-dnd";
@@ -14,7 +14,6 @@ import {
 } from '../../services/actions/products';
 import CurrentBunElement from './BunElement';
 import CurrentNotBunElement from './NotBunElement';
-import { RootState } from '../../services/reducers';
 
 interface BurgerConstructorProps {
   handleOpenModal: (orderNumber: number) => void,
@@ -24,10 +23,10 @@ interface BurgerConstructorProps {
 const BurgerConstructor = ({handleOpenModal, onDropHandler}: BurgerConstructorProps) => {  
   const dispatch = useDispatch();  
   const history = useHistory();
-  const bunIngridientInOrder = useSelector((state: RootState) => state.products.bunIngridientInOrder);
-  const notBunIngridientsInOrder = useSelector((state: RootState) => state.products.notBunIngridientsInOrder);
-  const productData = useSelector((state: RootState) => state.products.productData);
-  const orderNumber = useSelector((state: RootState) => state.order.orderNumber);
+  const bunIngridientInOrder = useSelector(state => state.products.bunIngridientInOrder);
+  const notBunIngridientsInOrder = useSelector(state => state.products.notBunIngridientsInOrder);
+  const productData = useSelector(state => state.products.productData);
+  const orderNumber = useSelector(state => state.order.orderNumber);
   const [ totalPrice, setTotalPrice ] = useState(0);
   const isUserLoaded = localStorage.getItem('accessToken');  
   const disabled = (totalPrice === 0 || bunIngridientInOrder.length === 0);

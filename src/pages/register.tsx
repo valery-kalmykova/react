@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../services/hooks/hooks';
 import { registerUser } from '../services/actions/user';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';

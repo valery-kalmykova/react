@@ -1,6 +1,5 @@
 import { ThunkAction } from 'redux-thunk';
 import { Action, ActionCreator } from 'redux';
-
 import { combineReducers } from 'redux';
 import { productsReducer } from './products';
 import { ingredientDetailReducer } from './ingredientDetail';

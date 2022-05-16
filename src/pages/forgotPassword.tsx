@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks/hooks';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { forgotPassword } from '../services/actions/password';
 import { mailformat } from '../utils/constants';
-import { RootState } from '../services/reducers';
 
 const ForgotPassword = () => {
   const history = useHistory();
@@ -14,7 +13,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState(''); 
   const [hasError, setHasError] = useState(false);
   const disabledSubmit = (email === '' || hasError);
-  const keySendSuccess = useSelector((state: RootState) => state.password)
+  const keySendSuccess = useSelector(state => state.password)
 
   const login = useCallback(
     () => {

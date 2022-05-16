@@ -6,7 +6,7 @@ import {
   WS_GET_ORDERS,
   WS_SEND_MESSAGE
 } from '../actions/wsActions';
-import { Store } from 'redux';
+import { AnyAction, MiddlewareAPI } from 'redux'
 
 interface TwsActions {
   wsInit: 'WS_CONNECTION_START',
@@ -27,10 +27,10 @@ export const wsActions: TwsActions = {
 };
 
 export const socketMiddleware = (wsUrl: string, wsActions: TwsActions) => {
-  return (store: any) => {
-    let socket: any;
+  return (store: MiddlewareAPI) => {
+    let socket: WebSocket | null;
 
-    return (next: any) => (action: any) => {      
+    return (next: any) => (action: AnyAction) => {      
       const { dispatch } = store;
       const { type, payload } = action;
       const { wsInit, onOpen, onClose, onError, onMessage, wsSendMessage } = wsActions;
@@ -47,21 +47,21 @@ export const socketMiddleware = (wsUrl: string, wsActions: TwsActions) => {
         }      
       } 
       if (socket) {
-        socket.onopen = (event: any) => {                   
+        socket.onopen = (event) => {                   
           dispatch({ type: onOpen, payload: event });          
         };
 
-        socket.onerror = (event: any) => {
+        socket.onerror = (event) => {
           dispatch({ type: onError, payload: event });
         };
 
-        socket.onmessage = (event: any) => {          
+        socket.onmessage = (event) => {          
           const { data } = event;
           const parsedData = JSON.parse(data); 
           dispatch({ type: onMessage, payload: parsedData });
         };        
         
-        socket.onclose = (event: any) => {
+        socket.onclose = (event) => {
           dispatch({ type: onClose, payload: event });
         }; 
 

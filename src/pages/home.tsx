@@ -5,18 +5,17 @@ import Modal from '../components/Modal/Modal';
 import OrderDetails from '../components/OrderDetails/OrderDetails';
 import styles from './pages.module.css';
 import { menuItemProp } from '../utils/constants'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks/hooks';
 import { handleOpenOrder, handleCloseOrder } from '../services/actions/order';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { addDraggedElement, increaseCountElement, DELETE_PREV_BUN_ELEMENT, setKeyValue} from '../services/actions/products';
 import { Loader } from '../ui/Loader/Loader';
-import { RootState } from '../services/reducers';
 
 const HomePage = () => { 
   const dispatch = useDispatch();
 
-  const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector((state: RootState) => state.order);
+  const {orderNumber, orderRequest, isVisibleModalOrder} = useSelector(state => state.order);
   
   const openOrder = (orderNumber: number) => {
     dispatch(handleOpenOrder(orderNumber))

@@ -1,9 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks/hooks';
 import { useParams, useHistory, useLocation, Redirect }from 'react-router-dom';
 import Modal from './Modal';
 import OrderFeedDetail from '../OrderFeedDetail/OrderFeedDetail';
-import { RootState } from '../../services/reducers';
 import { order } from '../../utils/constants';
 
 const ModalWithFeedDetail = () => {
@@ -11,7 +10,7 @@ const ModalWithFeedDetail = () => {
   const location = useLocation();  
   const backgroundPath = location.pathname.slice(0, location.pathname.lastIndexOf('/'));
   const { id } = useParams<{id?: string}>();
-  const orders = useSelector((state:RootState) => state.wsReducer.orders);
+  const orders = useSelector(state => state.wsReducer.orders);
   const order = orders.find((element: order) => element._id === id);
 
   const closeFeedDetail = () => {    

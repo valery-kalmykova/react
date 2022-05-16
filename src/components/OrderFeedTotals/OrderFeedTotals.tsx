@@ -1,14 +1,13 @@
 import React from 'react';
 import styles from './OrderFeedTotals.module.css';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers';
+import { useSelector } from '../../services/hooks/hooks';
 import { order } from '../../utils/constants';
 
 const OrderFeedTotals = () => {
-  const orders = useSelector((state:RootState) => state.wsReducer.orders);
-  const total = useSelector((state:RootState) => state.wsReducer.total);
-  const totalToday = useSelector((state:RootState) => state.wsReducer.totalToday);
-  const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess); 
+  const orders = useSelector(state => state.wsReducer.orders);
+  const total = useSelector(state => state.wsReducer.total);
+  const totalToday = useSelector(state => state.wsReducer.totalToday);
+  const getOrdersSuccess = useSelector(state => state.wsReducer.getOrdersSuccess); 
   
   if (getOrdersSuccess) {
     return (

@@ -1,16 +1,15 @@
 import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks/hooks';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { changeUser } from '../services/actions/user';
-import { RootState } from '../services/reducers';
 import { mailformat  } from '../utils/constants';
 import ProfileNavigation from '../components/ProfileNavigation/ProfileNavigation'
 
 const Profile = () => {
   const dispatch = useDispatch();    
-  const name = useSelector((state:RootState) => state.user.user.name);
-  const email = useSelector((state:RootState) => state.user.user.email);  
+  const name = useSelector(state => state.user.user.name);
+  const email = useSelector(state => state.user.user.email);  
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [newUserData, setNewUserData] = useState({

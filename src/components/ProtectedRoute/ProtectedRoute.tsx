@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { Loader } from '../../ui/Loader/Loader';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../services/reducers';
+import { useSelector, useDispatch } from '../../services/hooks/hooks';
 import { getUser } from '../../services/actions/user';
 
 interface ProtectedRouteProps {
@@ -13,8 +12,8 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children, ...restOfProps }: ProtectedRouteProps) { 
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn); 
-  const isLoading = useSelector((state: RootState) => state.user.getRequest);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn); 
+  const isLoading = useSelector(state => state.user.getRequest);
   
   useEffect(
     () => {

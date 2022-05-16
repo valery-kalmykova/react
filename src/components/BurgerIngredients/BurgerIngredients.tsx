@@ -2,11 +2,10 @@ import React, {useState, useEffect, useRef, RefObject, useCallback} from 'react'
 import { useHistory, useLocation }from 'react-router-dom';
 import burgerIngredientsStyles from './BurgerIngredients.module.css';
 import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks/hooks';
 import { menuItemProp } from '../../utils/constants'
 import { useDrag } from "react-dnd";
 import { useOnScreen } from './useOnScreen';
-import { RootState } from '../../services/reducers';
 
 interface CardProps {
   dataElement: menuItemProp  
@@ -66,9 +65,8 @@ const TypeCards = ({type, productData}: TypeCardsProps) => {
   ) 
 }
 
-
 const BurgerIngredients = () => {  
-  const productData = useSelector((state:RootState) => state.products.productData);
+  const productData = useSelector(state => state.products.productData);
   
   const main = useRef(null) as RefObject<HTMLHeadingElement>;
   const sauce = useRef(null) as RefObject<HTMLHeadingElement>;

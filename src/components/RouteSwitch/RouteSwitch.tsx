@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, useLocation, Switch}from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/hooks/hooks';
 import HomePage from '../../pages/home';
 import Login from '../../pages/login';
 import Register from '../../pages/register';
@@ -14,8 +14,7 @@ import Feed from '../../pages/feed';
 import FeedDetail from '../../pages/feedDetail';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import ModalWithIngridientDetail from '../Modal/ModalWithIngridientDetail';
-import ModalWithFeedDetail from '../Modal/ModalWithFeedDetail'
-import { RootState } from '../../services/reducers';
+import ModalWithFeedDetail from '../Modal/ModalWithFeedDetail';
 import { refreshToken, setIsLoggedIn, setIsNotLoggedIn } from '../../services/actions/user';
 
 interface LocationState {  
@@ -27,9 +26,9 @@ const RouteSwitch = () => {
   const dispatch = useDispatch();
   const keySendSuccess = localStorage.getItem('keySendSuccess');
   const background = location.state && location.state.background;  
-  const itemSuccess = useSelector((state:RootState) => state.products.response); 
-  const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn); 
-  const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
+  const itemSuccess = useSelector(state => state.products.response); 
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn); 
+  const getOrdersSuccess = useSelector(state => state.wsReducer.getOrdersSuccess);
   
   const expiryToken = (token: string) => {
     return (JSON.parse(atob(token.split('.')[1]))).exp

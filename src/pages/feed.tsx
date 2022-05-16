@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import styles from './pages.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks/hooks';
 import OrderFeed from '../components/OrderFeed/OrderFeed';
 import OrderFeedTotals from '../components/OrderFeedTotals/OrderFeedTotals';
 import { WS_CONNECTION_START, WS_CONNECTION_CLOSED } from '../services/actions/wsActions';
-import { RootState } from '../services/reducers';
 
 const Feed = () => {
   const dispatch = useDispatch();
-  const wsConnected = useSelector((state:RootState) => state.wsReducer.wsConnected);
+  const wsConnected = useSelector(state => state.wsReducer.wsConnected);
   
   useEffect(
     () => {      
