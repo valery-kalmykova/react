@@ -28,7 +28,7 @@ export const wsActions: TwsActions = {
 
 export const socketMiddleware = (wsUrl: string, wsActions: TwsActions) => {
   return (store: MiddlewareAPI) => {
-    let socket: WebSocket | null;
+    let socket: WebSocket | null = null;
 
     return (next: any) => (action: AnyAction) => {      
       const { dispatch } = store;
