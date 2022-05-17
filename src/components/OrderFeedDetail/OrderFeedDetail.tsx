@@ -2,15 +2,14 @@ import React from 'react';
 import styles from './OrderFeedDetail.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { order, menuItemProp } from '../../utils/constants';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers';
+import { useSelector } from '../../services/hooks/hooks';
 import { fotmatDate, useFormatStatus } from '../../utils/functions';
 
 interface IngredientInOrderProps {
   element: menuItemProp
 }
 
-const IngredientInOrder: React.FC<IngredientInOrderProps> = ({element}) => {
+const IngredientInOrder = ({element}: IngredientInOrderProps) => {
   return (
     <li className={styles.item + ' mb-4 mr-6'}>
       <img src={element.image} alt={element.name} className={styles.image}/>
@@ -29,8 +28,8 @@ interface OrderFeedDetailProps {
   order: order
 }
 
-const OrderFeedDetail: React.FC<OrderFeedDetailProps> = ({order}) => {
-  const productData = useSelector((state:RootState) => state.products.productData);
+const OrderFeedDetail = ({order}: OrderFeedDetailProps) => {
+  const productData = useSelector(state => state.products.productData);
   const status = useFormatStatus(order);
 
   const ingredientsInOrder = productData

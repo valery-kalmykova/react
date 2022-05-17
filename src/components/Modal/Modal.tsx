@@ -6,13 +6,17 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 interface ModalProps {
   children: React.ReactNode,
-  title: string,
+  title: string | number,
   handleClose: () => void
 }
 
-const Modal: React.FC<ModalProps> = ({title, children, handleClose}) => {
+interface KeyboardEvent {
+  key: string;
+}
+
+const Modal = ({title, children, handleClose}: ModalProps) => {
   useEffect(() => {
-    const close = (e) => {
+    const close = (e: KeyboardEvent) => {
       if(e.key === 'Escape'){
         handleClose()
       }

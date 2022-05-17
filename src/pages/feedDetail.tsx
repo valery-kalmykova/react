@@ -1,20 +1,18 @@
 import React, { useEffect } from 'react';
 import styles from './pages.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks/hooks';
 import { WS_CONNECTION_START, WS_CONNECTION_CLOSED } from '../services/actions/wsActions';
-import { useSelector } from 'react-redux';
 import { useParams, Redirect }from 'react-router-dom';
 import OrderFeedDetail from '../components/OrderFeedDetail/OrderFeedDetail';
-import { RootState } from '../services/reducers';
 import { Loader } from '../ui/Loader/Loader';
 import { order } from '../utils/constants';
 
 const FeedDetail: React.FC = () => {  
-  const { id } = useParams();
-  const orders = useSelector((state:RootState) => state.wsReducer.orders);
-  const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
+  const { id } = useParams<{id?: string}>();
+  const orders = useSelector(state => state.wsReducer.orders);
+  const getOrdersSuccess = useSelector(state => state.wsReducer.getOrdersSuccess);
   const order = orders.find((element: order) => element._id === id);
-  const wsConnected = useSelector((state:RootState) => state.wsReducer.wsConnected);
+  const wsConnected = useSelector(state => state.wsReducer.wsConnected);
 
   const dispatch = useDispatch(); 
   
@@ -39,7 +37,7 @@ const FeedDetail: React.FC = () => {
     return <Loader size="large" inverse={true}/>
   }
 
-  if (getOrdersSuccess) {
+  if (getOrdersSuccess && order) {
     return (
       <div className={styles.mainFeedDetail}>
         <p className={styles.mainFeedDetailNumber + " text text_type_digits-default"}>{'#'+order.number}</p>

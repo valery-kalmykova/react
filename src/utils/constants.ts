@@ -1,4 +1,4 @@
-export interface menuItemProp {
+export interface menuItemProp {  
   _id: string,
   name: string,
   type: string,
@@ -50,9 +50,14 @@ export const orderDefault = {
 }
 
 export interface userData {
-  email?: string, 
+  email: string, 
   password: string, 
-  name?: string
+  name: string
+}
+
+export interface loginData {
+  email: string, 
+  password: string  
 }
 
 export const userDefault = {
@@ -64,7 +69,7 @@ export const userDefault = {
 export const baseUrl = 'https://norma.nomoreparties.space/api';
 export const wsUrl = 'wss://norma.nomoreparties.space/orders';
 
-export function checkResponse(res: any) {
+export function checkResponse(res: Response) {
   if (res.ok) {
     return res.json();    
   } else {

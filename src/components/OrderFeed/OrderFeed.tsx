@@ -2,8 +2,7 @@ import React, { useCallback} from 'react';
 import styles from './OrderFeed.module.css';
 import { useLocation, useHistory } from 'react-router-dom';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers';
+import { useSelector } from '../../services/hooks/hooks';
 import { order, menuItemProp } from '../../utils/constants';
 import { fotmatDate, useFormatStatus } from '../../utils/functions';
 
@@ -11,11 +10,11 @@ interface OrderCardProps {
   order: order,
   path: string
 }
-const OrderCard: React.FC<OrderCardProps> = ({order, path}) => {  
+const OrderCard = ({order, path}: OrderCardProps) => {  
   const location = useLocation();
   const history = useHistory();
   const ordersProfilePath = (location.pathname === '/profile/orders');
-  const productData = useSelector((state:RootState) => state.products.productData);
+  const productData = useSelector(state => state.products.productData);
   const numberImagesToDisplay = 5;
   const status = useFormatStatus(order);
   
@@ -74,14 +73,14 @@ interface OrderFeedProps {
   path: string
 }
 
-const OrderFeed: React.FC<OrderFeedProps> = ({path}) => {
-  const orders = useSelector((state:RootState) => state.wsReducer.orders);
-  const getOrdersSuccess = useSelector((state:RootState) => state.wsReducer.getOrdersSuccess);
+const OrderFeed = ({path}: OrderFeedProps) => {
+  const orders = useSelector(state => state.wsReducer.orders);
+  const getOrdersSuccess = useSelector(state => state.wsReducer.getOrdersSuccess);
   
   if (getOrdersSuccess) {
     return (
       <div className={styles.section}>
-        {orders.sort((a, b) => {
+        {orders.sort((a: order, b: order) => {
           return b.number - a.number
         })
           .map((order: order) => {

@@ -2,20 +2,20 @@ import {
   HANDLE_OPEN_INGREDIENT_DETAIL,
   HANDLE_CLOSE_INGREDIENT_DETAIL
 } from '../actions/ingredientDetail';
-import { AnyAction } from 'redux';
 import { menuItemProp, itemDefault } from '../../utils/constants';
+import type { IhandleIngredientDetailActions } from '../actions/ingredientDetail'
 
-interface iinitialState { 
+interface IinitialState { 
   item: menuItemProp,
   isVisibleModal: boolean 
 }
 
-const initialState:iinitialState = {
+const initialState:IinitialState = {
   item: itemDefault,
   isVisibleModal: false
 }
 
-export const ingredientDetailReducer = (state = initialState, action: AnyAction) => {
+export const ingredientDetailReducer = (state = initialState, action: IhandleIngredientDetailActions): IinitialState => {
   switch (action.type) {
     case HANDLE_OPEN_INGREDIENT_DETAIL: {
       return {

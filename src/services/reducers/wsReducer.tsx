@@ -4,10 +4,10 @@ import {
   WS_CONNECTION_CLOSED,
   WS_GET_ORDERS
 } from '../actions/wsActions';
-import { AnyAction } from 'redux';
+import { IwsActions } from '../actions/wsActions';
 import { order, orderDefault } from '../../utils/constants';
 
-interface iinitialState {
+interface IinitialState {
   wsConnected: boolean,
   orders: order[],
   total: number,
@@ -15,7 +15,7 @@ interface iinitialState {
   getOrdersSuccess: boolean
 }
 
-const initialState = {
+const initialState: IinitialState = {
   wsConnected: false,
   orders: [orderDefault],  
   total: 0,
@@ -23,7 +23,7 @@ const initialState = {
   getOrdersSuccess: false
 };
 
-export const wsReducer = (state: iinitialState = initialState, action: AnyAction) => {
+export const wsReducer = (state: IinitialState = initialState, action: IwsActions): IinitialState => {
   switch (action.type) {
     case WS_CONNECTION_SUCCESS:
       return {

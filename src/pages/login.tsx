@@ -1,16 +1,19 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, SyntheticEvent } from 'react';
 import { useHistory, Redirect, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks/hooks';
 import { loginUser } from '../services/actions/user';
 import styles from './pages.module.css';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { mailformat  } from '../utils/constants';
-import { RootState } from '../services/reducers';
+
+interface LocationState {    
+  from: string
+}
 
 const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { state } = useLocation();
+  const { state } = useLocation<LocationState>();
   const [userData, setUserData] = useState({
     email: '',
     password: '',    
@@ -28,7 +31,7 @@ const Login = () => {
     setPasswordShow(!passwordShow)
   }
 
-  const submitHandler = async (e) => { 
+  const submitHandler = async (e: SyntheticEvent) => { 
     e.preventDefault();
     if (disabledSubmit) return
     await dispatch(loginUser(userData)); 
@@ -50,7 +53,7 @@ const Login = () => {
     [history]
   );
   
-  const isLoggedIn = useSelector((state:RootState) => state.user.isLoggedIn);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
   if(isLoggedIn) {
     return(
       <Redirect to={ state?.from || '/' }/>

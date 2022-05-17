@@ -1,10 +1,8 @@
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/hooks/hooks';
 import styles from './ProfileNavigation.module.css';
 import { logoutUser } from '../../services/actions/user';
-import { RootState } from '../../services/reducers';
-
 
 const ProfileNavigation = () => {
   const dispatch = useDispatch();  
@@ -12,7 +10,7 @@ const ProfileNavigation = () => {
   const location = useLocation();
   const activeProfile = (location.pathname === '/profile');
   const activeOrders = (location.pathname === '/profile/orders');  
-  const logoutSuccess = useSelector((state:RootState) => state.user.logoutSuccess);    
+  const logoutSuccess = useSelector(state => state.user.logoutSuccess);    
   
   const logout = async () => {  
     await dispatch(logoutUser());

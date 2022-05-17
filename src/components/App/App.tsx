@@ -3,9 +3,8 @@ import { BrowserRouter as Router }from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
 import appStyle from './App.module.css';
 import RouteSwitch from '../RouteSwitch/RouteSwitch'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/hooks/hooks';
 import { getItems } from '../../services/actions/products';
-import { RootState } from '../../services/reducers';
 import { Loader } from '../../ui/Loader/Loader';
 
 const App = () => {   
@@ -18,7 +17,7 @@ const App = () => {
     [dispatch]
   );
 
-  const isLoarding = useSelector((state:RootState) => state.products.itemsRequest);  
+  const isLoarding = useSelector(state => state.products.itemsRequest);  
   
   if (isLoarding) {
     return (<Loader size="large" inverse={true}/>)

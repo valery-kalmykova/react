@@ -20,10 +20,10 @@ import {
   REFRESH_TOKEN_SUCCESS,
   REFRESH_TOKEN_FAILED, 
 } from '../actions/user';
-import { AnyAction } from 'redux';
+import type { IUserActions } from '../actions/user';
 import { userData, userDefault } from '../../utils/constants';
 
-interface iinitialState { 
+interface IinitialState { 
   user: userData,
   getUserSuccess: boolean,
   loginRequest: boolean,
@@ -43,7 +43,7 @@ interface iinitialState {
   refreshSuccess: boolean,
 }
 
-const initialState:iinitialState = {
+const initialState:IinitialState = {
   user: userDefault,
   getUserSuccess: false,
   loginRequest: false,
@@ -63,7 +63,7 @@ const initialState:iinitialState = {
   refreshSuccess: false,
 }
 
-export const userReducer = (state = initialState, action: AnyAction) => {
+export const userReducer = (state = initialState, action: IUserActions): IinitialState => {
   switch (action.type) {
     case LOGIN_USER_REQUEST: {
       return {
@@ -85,7 +85,7 @@ export const userReducer = (state = initialState, action: AnyAction) => {
         ...state,
         loginFailed: true, 
         loginRequest: false,
-        user: null
+        user: userDefault
       }
     }
 
@@ -109,7 +109,7 @@ export const userReducer = (state = initialState, action: AnyAction) => {
         ...state,
         registerFailed: true, 
         registerRequest: false,
-        user: null
+        user: userDefault
       }
     }
 
@@ -134,7 +134,7 @@ export const userReducer = (state = initialState, action: AnyAction) => {
         ...state,
         getFailed: true, 
         getRequest: false,
-        user: null
+        user: userDefault
       }
     }
 
