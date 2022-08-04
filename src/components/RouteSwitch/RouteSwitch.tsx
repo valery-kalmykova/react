@@ -59,6 +59,9 @@ const RouteSwitch = () => {
         <Route exact path='/'>
           <HomePage/>
         </Route>
+        <Route exact path='/react'>
+          <HomePage/>
+        </Route>
         <Route exact path='/login'>
           <Login/>
         </Route>
